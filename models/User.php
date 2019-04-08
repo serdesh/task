@@ -2,18 +2,23 @@
 
 namespace app\models;
 
-class User extends \yii\base\BaseObject implements \yii\web\IdentityInterface
+use yii\base\BaseObject;
+use yii\web\IdentityInterface;
+
+class User extends BaseObject implements IdentityInterface
 {
     public $id;
     public $username;
     public $password;
     public $authKey;
     public $accessToken;
+    public $name;
 
     private static $users = [
         '100' => [
             'id' => '100',
             'username' => 'admin',
+            'name' => 'Сергей Desh',
             'password' => 'admin',
             'authKey' => 'test100key',
             'accessToken' => '100-token',
@@ -73,6 +78,14 @@ class User extends \yii\base\BaseObject implements \yii\web\IdentityInterface
     public function getId()
     {
         return $this->id;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getName()
+    {
+        return $this->name;
     }
 
     /**

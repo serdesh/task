@@ -3,6 +3,7 @@ use yii\helpers\Html;
 
 /* @var $this \yii\web\View */
 /* @var $content string */
+/* @var $directoryAsset Yii::$app->assetManager->getPublishedUrl('@vendor/almasaeed2010/adminlte/dist'); */
 ?>
 
 <header class="main-header">
@@ -230,7 +231,7 @@ use yii\helpers\Html;
                 <li class="dropdown user user-menu">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                         <img src="<?= $directoryAsset ?>/img/user2-160x160.jpg" class="user-image" alt="User Image"/>
-                        <span class="hidden-xs">Alexander Pierce</span>
+                        <span class="hidden-xs"><?= (new app\models\User)->getName(); ?></span>
                     </a>
                     <ul class="dropdown-menu">
                         <!-- User image -->
