@@ -35,9 +35,33 @@ class TaskController extends Controller
     /**
      * Lists all Task models.
      * @return mixed
+     * @throws NotFoundHttpException
      */
     public function actionIndex()
-    {    
+    {
+        $request = Yii::$app->request;
+
+        //if Editable
+        if ($request->isPost && $request->post('hasEditable')) {
+            Yii::$app->response->format = Response::FORMAT_JSON;
+            $index = $request->post('editableIndex'); //Порядковый номер редактируемой ячейки (считается с нуля)
+            $key = $request->post('editableKey'); //Id редактируемой задачи
+            $attribute = $request->post('editableAttribute'); //Наименование редактируемого атрибута
+
+            $model = $this->findModel($key);
+
+            Yii::info($model->$attribute, 'test');
+
+            $model->$attribute = $request->post('Task')[$index][$attribute];
+            $model->save();
+            Yii::info($model->$attribute, 'test');
+
+            if ($model->hasErrors()) {
+                Yii::error($model->errors, __METHOD__);
+                Yii::$app->session->setFlash(implode(PHP_EOL, $model->errors));
+            }
+            return ['output' => $model->$attribute];
+        }
         $searchModel = new TaskSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
@@ -55,19 +79,19 @@ class TaskController extends Controller
      * @throws NotFoundHttpException
      */
     public function actionView($id)
-    {   
+    {
         $request = Yii::$app->request;
-        if($request->isAjax){
+        if ($request->isAjax) {
             Yii::$app->response->format = Response::FORMAT_JSON;
             return [
-                    'title'=> "Task #".$id,
-                    'content'=>$this->renderAjax('view', [
-                        'model' => $this->findModel($id),
-                    ]),
-                    'footer'=> Html::button('Close',['class'=>'btn btn-default pull-left','data-dismiss'=>"modal"]).
-                            Html::a('Edit',['update','id'=>$id],['class'=>'btn btn-primary','role'=>'modal-remote'])
-                ];    
-        }else{
+                'title' => "Task #" . $id,
+                'content' => $this->renderAjax('view', [
+                    'model' => $this->findModel($id),
+                ]),
+                'footer' => Html::button('Close', ['class' => 'btn btn-default pull-left', 'data-dismiss' => "modal"]) .
+                    Html::a('Edit', ['update', 'id' => $id], ['class' => 'btn btn-primary', 'role' => 'modal-remote'])
+            ];
+        } else {
             return $this->render('view', [
                 'model' => $this->findModel($id),
             ]);
@@ -83,44 +107,44 @@ class TaskController extends Controller
     public function actionCreate()
     {
         $request = Yii::$app->request;
-        $model = new Task();  
+        $model = new Task();
 
-        if($request->isAjax){
+        if ($request->isAjax) {
             /*
             *   Process for ajax request
             */
             Yii::$app->response->format = Response::FORMAT_JSON;
-            if($request->isGet){
+            if ($request->isGet) {
                 return [
-                    'title'=> "Create new Task",
-                    'content'=>$this->renderAjax('create', [
+                    'title' => "Create new Task",
+                    'content' => $this->renderAjax('create', [
                         'model' => $model,
                     ]),
-                    'footer'=> Html::button('Close',['class'=>'btn btn-default pull-left','data-dismiss'=>"modal"]).
-                                Html::button('Save',['class'=>'btn btn-primary','type'=>"submit"])
-        
-                ];         
-            }else if($model->load($request->post()) && $model->save()){
+                    'footer' => Html::button('Close', ['class' => 'btn btn-default pull-left', 'data-dismiss' => "modal"]) .
+                        Html::button('Save', ['class' => 'btn btn-primary', 'type' => "submit"])
+
+                ];
+            } else if ($model->load($request->post()) && $model->save()) {
                 return [
-                    'forceReload'=>'#crud-datatable-pjax',
-                    'title'=> "Create new Task",
-                    'content'=>'<span class="text-success">Create Task success</span>',
-                    'footer'=> Html::button('Close',['class'=>'btn btn-default pull-left','data-dismiss'=>"modal"]).
-                            Html::a('Create More',['create'],['class'=>'btn btn-primary','role'=>'modal-remote'])
-        
-                ];         
-            }else{           
+                    'forceReload' => '#crud-datatable-pjax',
+                    'title' => "Create new Task",
+                    'content' => '<span class="text-success">Create Task success</span>',
+                    'footer' => Html::button('Close', ['class' => 'btn btn-default pull-left', 'data-dismiss' => "modal"]) .
+                        Html::a('Create More', ['create'], ['class' => 'btn btn-primary', 'role' => 'modal-remote'])
+
+                ];
+            } else {
                 return [
-                    'title'=> "Create new Task",
-                    'content'=>$this->renderAjax('create', [
+                    'title' => "Create new Task",
+                    'content' => $this->renderAjax('create', [
                         'model' => $model,
                     ]),
-                    'footer'=> Html::button('Close',['class'=>'btn btn-default pull-left','data-dismiss'=>"modal"]).
-                                Html::button('Save',['class'=>'btn btn-primary','type'=>"submit"])
-        
-                ];         
+                    'footer' => Html::button('Close', ['class' => 'btn btn-default pull-left', 'data-dismiss' => "modal"]) .
+                        Html::button('Save', ['class' => 'btn btn-primary', 'type' => "submit"])
+
+                ];
             }
-        }else{
+        } else {
             /*
             *   Process for non-ajax request
             */
@@ -132,7 +156,7 @@ class TaskController extends Controller
                 ]);
             }
         }
-       
+
     }
 
     /**
@@ -146,43 +170,43 @@ class TaskController extends Controller
     public function actionUpdate($id)
     {
         $request = Yii::$app->request;
-        $model = $this->findModel($id);       
+        $model = $this->findModel($id);
 
-        if($request->isAjax){
+        if ($request->isAjax) {
             /*
             *   Process for ajax request
             */
             Yii::$app->response->format = Response::FORMAT_JSON;
-            if($request->isGet){
+            if ($request->isGet) {
                 return [
-                    'title'=> "Update Task #".$id,
-                    'content'=>$this->renderAjax('update', [
+                    'title' => "Update Task #" . $id,
+                    'content' => $this->renderAjax('update', [
                         'model' => $model,
                     ]),
-                    'footer'=> Html::button('Close',['class'=>'btn btn-default pull-left','data-dismiss'=>"modal"]).
-                                Html::button('Save',['class'=>'btn btn-primary','type'=>"submit"])
-                ];         
-            }else if($model->load($request->post()) && $model->save()){
+                    'footer' => Html::button('Close', ['class' => 'btn btn-default pull-left', 'data-dismiss' => "modal"]) .
+                        Html::button('Save', ['class' => 'btn btn-primary', 'type' => "submit"])
+                ];
+            } else if ($model->load($request->post()) && $model->save()) {
                 return [
-                    'forceReload'=>'#crud-datatable-pjax',
-                    'title'=> "Task #".$id,
-                    'content'=>$this->renderAjax('view', [
+                    'forceReload' => '#crud-datatable-pjax',
+                    'title' => "Task #" . $id,
+                    'content' => $this->renderAjax('view', [
                         'model' => $model,
                     ]),
-                    'footer'=> Html::button('Close',['class'=>'btn btn-default pull-left','data-dismiss'=>"modal"]).
-                            Html::a('Edit',['update','id'=>$id],['class'=>'btn btn-primary','role'=>'modal-remote'])
-                ];    
-            }else{
-                 return [
-                    'title'=> "Update Task #".$id,
-                    'content'=>$this->renderAjax('update', [
+                    'footer' => Html::button('Close', ['class' => 'btn btn-default pull-left', 'data-dismiss' => "modal"]) .
+                        Html::a('Edit', ['update', 'id' => $id], ['class' => 'btn btn-primary', 'role' => 'modal-remote'])
+                ];
+            } else {
+                return [
+                    'title' => "Update Task #" . $id,
+                    'content' => $this->renderAjax('update', [
                         'model' => $model,
                     ]),
-                    'footer'=> Html::button('Close',['class'=>'btn btn-default pull-left','data-dismiss'=>"modal"]).
-                                Html::button('Save',['class'=>'btn btn-primary','type'=>"submit"])
-                ];        
+                    'footer' => Html::button('Close', ['class' => 'btn btn-default pull-left', 'data-dismiss' => "modal"]) .
+                        Html::button('Save', ['class' => 'btn btn-primary', 'type' => "submit"])
+                ];
             }
-        }else{
+        } else {
             /*
             *   Process for non-ajax request
             */
@@ -212,13 +236,13 @@ class TaskController extends Controller
         $request = Yii::$app->request;
         $this->findModel($id)->delete();
 
-        if($request->isAjax){
+        if ($request->isAjax) {
             /*
             *   Process for ajax request
             */
             Yii::$app->response->format = Response::FORMAT_JSON;
-            return ['forceClose'=>true,'forceReload'=>'#crud-datatable-pjax'];
-        }else{
+            return ['forceClose' => true, 'forceReload' => '#crud-datatable-pjax'];
+        } else {
             /*
             *   Process for non-ajax request
             */
@@ -239,27 +263,27 @@ class TaskController extends Controller
      * @throws \yii\db\StaleObjectException
      */
     public function actionBulkdelete()
-    {        
+    {
         $request = Yii::$app->request;
-        $pks = explode(',', $request->post( 'pks' )); // Array or selected records primary keys
-        foreach ( $pks as $pk ) {
+        $pks = explode(',', $request->post('pks')); // Array or selected records primary keys
+        foreach ($pks as $pk) {
             $model = $this->findModel($pk);
             $model->delete();
         }
 
-        if($request->isAjax){
+        if ($request->isAjax) {
             /*
             *   Process for ajax request
             */
             Yii::$app->response->format = Response::FORMAT_JSON;
-            return ['forceClose'=>true,'forceReload'=>'#crud-datatable-pjax'];
-        }else{
+            return ['forceClose' => true, 'forceReload' => '#crud-datatable-pjax'];
+        } else {
             /*
             *   Process for non-ajax request
             */
             return $this->redirect(['index']);
         }
-       
+
     }
 
     /**
@@ -276,5 +300,89 @@ class TaskController extends Controller
         } else {
             throw new NotFoundHttpException('The requested page does not exist.');
         }
+    }
+
+    /**
+     * Add Task
+     * @return Response
+     */
+    public function actionAddEmptyTask()
+    {
+        $model = new Task();
+        $model->status = Task::TASK_STATUS_IN_WORK;
+        if (!$model->save()) {
+            Yii::error($model->errors, __METHOD__);
+            Yii::$app->session->setFlash('error', 'Ошибка добавления');
+        }
+        return $this->redirect(['index']);
+    }
+
+    /**
+     * @param int $id ID задачи
+     * @return Response
+     * @throws NotFoundHttpException
+     */
+    public function actionStartTask($id)
+    {
+        $model = $this->findModel($id);
+
+        if ($model->start) {
+            //Если есть начало периода - к общему времени добавляем прошедшее время между началом и текущим моментом
+            $date_diff = Task::dateDifference(date('Y-m-d H:i', time()), $model->start); //Разница в минутах
+
+            Yii::info('Date-diff(min): ' . $date_diff, 'test');
+
+            $all_time = $model->all_time;
+
+            if ($date_diff) {
+
+                //Добавляем к общему увремени
+                $all_time += (int)$date_diff;
+                $model->all_time = $all_time;
+
+                Yii::info('All time(min): ' . $date_diff, 'test');
+
+
+                if (!$model->save()) {
+                    Yii::error($model->errors, __METHOD__);
+                    Yii::$app->session->setFlash('error', 'Ошибка сохранения общего времени');
+                } else {
+                    $model->start = null;
+                    $model->save();
+                }
+            }
+        } else {
+            $model->start = date('Y-m-d H:i', time());
+            $model->save();
+        }
+        return $this->redirect(['index']);
+    }
+
+    /**
+     * @return string
+     * @throws NotFoundHttpException
+     */
+    public function actionSetStatus()
+    {
+        $request = Yii::$app->request;
+
+        $id = $request->post('id');
+        $status = $request->post('status');
+
+        $model = $this->findModel($id);
+
+        Yii::info('Status after: ' . $model->status, 'test');
+
+        $model->status = $status;
+
+        Yii::info('Status before: ' . $model->status, 'test');
+
+        if (!$model->save()){
+            Yii::error($model->errors, __METHOD__);
+            return 'error';
+        }
+
+        return 'success';
+
     }
 }
