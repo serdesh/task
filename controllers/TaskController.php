@@ -2,6 +2,7 @@
 
 namespace app\controllers;
 
+use app\models\Project;
 use Yii;
 use app\models\Task;
 use app\models\search\TaskSearch;
@@ -383,6 +384,32 @@ class TaskController extends Controller
         }
 
         return 'success';
+    }
 
+    /**
+     * Set project for Task
+     * @return array
+     * @throws NotFoundHttpException
+     */
+    public function actionSetProject()
+    {
+        Yii::$app->response->format = Response::FORMAT_JSON;
+        $request = Yii::$app->request;
+
+        $id = $request->post('id');
+        $project_id = $request->post('project_id');
+
+        $model = $this->findModel($id);
+
+        $project_name = Project::findOne($project_id)->name;
+
+        $model->project_id = $project_id;
+
+        if (!$model->save()){
+            Yii::error($model->errors, __METHOD__);
+            return ['error'];
+        }
+
+        return ['success', $project_name];
     }
 }

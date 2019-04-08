@@ -4,6 +4,7 @@ namespace app\models;
 
 use app\models\query\BossQuery;
 use yii\db\ActiveRecord;
+use yii\helpers\ArrayHelper;
 
 /**
  * This is the model class for table "boss".
@@ -47,10 +48,10 @@ class Boss extends ActiveRecord
     {
         return [
             'id' => 'ID',
-            'name' => 'Name',
-            'messenger_id' => 'Messenger ID',
-            'messenger_number' => 'Messenger Number',
-            'notes' => 'Notes',
+            'name' => 'Имя',
+            'messenger_id' => 'ID месенджера',
+            'messenger_number' => 'Номер месенджера',
+            'notes' => 'Заметки',
         ];
     }
 
@@ -77,5 +78,12 @@ class Boss extends ActiveRecord
     public static function find()
     {
         return new BossQuery(get_called_class());
+    }
+
+    public static function getList()
+    {
+       $bosses = self::find()->all();
+
+       return ArrayHelper::map($bosses, 'id', 'name');
     }
 }

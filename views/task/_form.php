@@ -1,4 +1,7 @@
 <?php
+
+use app\models\Project;
+use app\models\Task;
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 
@@ -11,23 +14,27 @@ use yii\widgets\ActiveForm;
 
     <?php $form = ActiveForm::begin(); ?>
 
-    <?= $form->field($model, 'description')->textarea(['rows' => 6]) ?>
+    <?= $form->field($model, 'project_id')->dropDownList(Project::getProjectList(), [
+        'placeholder' => 'Выберите проект.'
+    ]) ?>
 
-    <?= $form->field($model, 'start')->textInput() ?>
+    <?= $form->field($model, 'description')->textarea(['rows' => 3]) ?>
 
-    <?= $form->field($model, 'all_time')->textInput(['maxlength' => true]) ?>
+    <?php if (!$model->isNewRecord): ?>
+        <?= $form->field($model, 'all_time')->textInput(['maxlength' => true]) ?>
 
-    <?= $form->field($model, 'status')->textInput() ?>
+        <?= $form->field($model, 'status')->dropDownList(Task::getStatusList()) ?>
+    <?php endif; ?>
 
-    <?= $form->field($model, 'notes')->textarea(['rows' => 6]) ?>
+    <?= $form->field($model, 'notes')->textarea(['rows' => 3]) ?>
 
-  
-	<?php if (!Yii::$app->request->isAjax){ ?>
-	  	<div class="form-group">
-	        <?= Html::submitButton($model->isNewRecord ? 'Create' : 'Update', ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
-	    </div>
-	<?php } ?>
+
+    <?php if (!Yii::$app->request->isAjax) { ?>
+        <div class="form-group">
+            <?= Html::submitButton($model->isNewRecord ? 'Create' : 'Update', ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
+        </div>
+    <?php } ?>
 
     <?php ActiveForm::end(); ?>
-    
+
 </div>

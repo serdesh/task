@@ -6,9 +6,9 @@ use yii\widgets\DetailView;
 /* @var $model app\models\Project */
 ?>
 <div class="project-view">
- 
+
     <?php try {
-       echo DetailView::widget([
+        echo DetailView::widget([
             'model' => $model,
             'attributes' => [
                 'id',
@@ -17,7 +17,11 @@ use yii\widgets\DetailView;
                 'login',
                 'password',
                 'created_at',
-                'boss_id',
+                [
+                    'attribute' => 'boss_id',
+                    'label' => 'Заказчик',
+                    'value' => $model->boss->name,
+                ]
             ],
         ]);
     } catch (Exception $e) {

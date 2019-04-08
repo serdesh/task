@@ -4,6 +4,7 @@ namespace app\models;
 
 use app\models\query\ProjectQuery;
 use yii\db\ActiveRecord;
+use yii\helpers\ArrayHelper;
 
 /**
  * This is the model class for table "project".
@@ -50,12 +51,12 @@ class Project extends ActiveRecord
     {
         return [
             'id' => 'ID',
-            'name' => 'Name',
+            'name' => 'Имя',
             'url' => 'Url',
-            'login' => 'Login',
-            'password' => 'Password',
-            'created_at' => 'Created At',
-            'boss_id' => 'Boss ID',
+            'login' => 'Логин',
+            'password' => 'Пароль',
+            'created_at' => 'Создан',
+            'boss_id' => 'ID босса',
         ];
     }
 
@@ -82,5 +83,16 @@ class Project extends ActiveRecord
     public static function find()
     {
         return new ProjectQuery(get_called_class());
+    }
+
+    /**
+     * Get List of projects
+     * @return array
+     */
+    public static function getProjectList()
+    {
+        $projects = self::find()->all();
+
+        return ArrayHelper::map($projects, 'id', 'name');
     }
 }

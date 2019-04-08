@@ -1,4 +1,6 @@
 <?php
+
+use app\models\Messenger;
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 
@@ -13,7 +15,7 @@ use yii\widgets\ActiveForm;
 
     <?= $form->field($model, 'name')->textInput(['maxlength' => true]) ?>
 
-    <?= $form->field($model, 'messenger_id')->textInput() ?>
+    <?= $form->field($model, 'messenger_id')->dropDownList(Messenger::getList()) ?>
 
     <?= $form->field($model, 'messenger_number')->textInput(['maxlength' => true]) ?>
 

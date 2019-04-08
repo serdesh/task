@@ -2,7 +2,9 @@
 
 namespace app\models;
 
+use app\models\query\MessengerQuery;
 use yii\db\ActiveRecord;
+use yii\helpers\ArrayHelper;
 
 /**
  * This is the model class for table "messenger".
@@ -53,10 +55,16 @@ class Messenger extends ActiveRecord
 
     /**
      * {@inheritdoc}
-     * @return \app\models\query\MessengerQuery the active query used by this AR class.
+     * @return MessengerQuery the active query used by this AR class.
      */
     public static function find()
     {
-        return new \app\models\query\MessengerQuery(get_called_class());
+        return new MessengerQuery(get_called_class());
+    }
+
+    public static function getList()
+    {
+        $messengers = self::find()->orderBy('name')->all();
+        return ArrayHelper::map($messengers, 'id', 'name');
     }
 }

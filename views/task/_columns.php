@@ -1,5 +1,6 @@
 <?php
 
+use app\models\Project;
 use app\models\Task;
 use yii\bootstrap\Html;
 use yii\helpers\Url;
@@ -26,10 +27,24 @@ return [
             'asPopover' => false,
         ]
     ],
-//    [
-//        'class'=>'\kartik\grid\DataColumn',
-//        'attribute'=>'start',
-//    ],
+    [
+        'class' => '\kartik\grid\DataColumn',
+        'attribute' => 'project_id',
+        'value' => function ($data) {
+            if (!$data->project_id) {
+                return Html::activeDropDownList($data, 'project_id', Project::getProjectList(), [
+                    'id' => 'project-dropdown',
+                    'data-id' => $data->id,
+                    'style' => 'width: 100%; border-radius: 4px; padding: 5px;',
+                    'prompt' => 'Выберите проект',
+                ]);
+            }
+            Yii::setAlias('@example', 'http://' . $data->project->name . '/');
+            return Html::a($data->project->name, '@example', ['target' => '_blank']);
+        },
+        'format' => 'raw',
+
+    ],
     [
         'class' => '\kartik\grid\DataColumn',
         'attribute' => 'all_time',
@@ -52,7 +67,7 @@ return [
     [
         'class' => '\kartik\grid\DataColumn',
         'value' => function ($data) {
-            if (!$data->status){
+            if (!$data->status) {
                 if ($data->start) {
                     return Html::a('Стоп', ['start-task', 'id' => $data->id], [
                         'class' => 'btn btn-danger',

@@ -94,6 +94,28 @@ $script = <<<JS
                 }
             )
         });
+        $(document).on('change', '#project-dropdown', function(event){
+            var select = $(event.target);
+            var selected_value = select.val();
+            var url =  'task/set-project';
+            var id = select.attr('data-id');
+            $.post(
+                url,
+                {
+                    id: id,
+                    project_id: selected_value
+                },
+                function(response) {
+                  console.log(response);
+                  if (response[0] == 'success'){
+                      //if status DONE
+                      select.hide();
+                      var td = select.parent('td');
+                      td.append(response[1]);
+                  } 
+                }
+            )
+        });
     })
 JS;
 

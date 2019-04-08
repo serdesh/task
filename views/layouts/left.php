@@ -18,7 +18,7 @@
         <form action="#" method="get" class="sidebar-form">
             <div class="input-group">
                 <input type="text" name="q" class="form-control" placeholder="Search..."/>
-              <span class="input-group-btn">
+                <span class="input-group-btn">
                 <button type='submit' name='search' id='search-btn' class="btn btn-flat"><i class="fa fa-search"></i>
                 </button>
               </span>
@@ -27,12 +27,22 @@
         <!-- /.search form -->
 
         <?php try {
-          echo  dmstr\widgets\Menu::widget(
+            echo dmstr\widgets\Menu::widget(
                 [
                     'options' => ['class' => 'sidebar-menu tree', 'data-widget' => 'tree'],
                     'items' => [
                         ['label' => 'Menu Yii2', 'options' => ['class' => 'header']],
                         ['label' => 'Задачник', 'icon' => 'calendar', 'url' => ['/task']],
+                        [
+                            'label' => 'Справочник',
+                            'icon' => 'file-code',
+                            'url' => '#',
+                            'items' => [
+                                ['label' => 'Проекты', 'icon' => 'file-code', 'url' => ['/project']],
+                                ['label' => 'Заказчики', 'icon' => 'user-o', 'url' => ['/boss']],
+                                ['label' => 'Месенджеры', 'icon' => 'user-o', 'url' => ['/messenger']],
+                            ]
+                        ],
                         ['label' => 'Gii', 'icon' => 'user-o', 'url' => ['/gii']],
                         ['label' => 'Debug', 'icon' => 'bug', 'url' => ['/debug']],
                         ['label' => 'Login', 'url' => ['site/login'], 'visible' => Yii::$app->user->isGuest, 'icon' => 'id-card'],
