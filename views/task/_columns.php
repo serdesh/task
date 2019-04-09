@@ -25,7 +25,7 @@ return [
         'attribute' => 'description',
         'editableOptions' => [
             'asPopover' => false,
-        ]
+        ],
     ],
     [
         'class' => '\kartik\grid\DataColumn',

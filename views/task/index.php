@@ -97,7 +97,7 @@ $script = <<<JS
         $(document).on('change', '#project-dropdown', function(event){
             var select = $(event.target);
             var selected_value = select.val();
-            var url =  'task/set-project';
+            var url =  'set-project';
             var id = select.attr('data-id');
             $.post(
                 url,

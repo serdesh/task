@@ -65,6 +65,14 @@ class TaskController extends Controller
         }
         $searchModel = new TaskSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+        $dataProvider->setSort([
+            'attributes' => [
+                'status', 'id'
+            ],
+            'defaultOrder' => [
+                'status' => SORT_ASC
+            ]
+        ]);
 
         return $this->render('index', [
             'searchModel' => $searchModel,

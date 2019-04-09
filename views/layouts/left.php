@@ -43,6 +43,8 @@
                                 ['label' => 'Месенджеры', 'icon' => 'user-o', 'url' => ['/messenger']],
                             ]
                         ],
+                        ['label' => 'GoogleDrive', 'icon' => 'user-o', 'url' => ['/site/drive']],
+                        ['label' => 'BackUp', 'icon' => 'user-o', 'url' => ['/site/backup']],
                         ['label' => 'Gii', 'icon' => 'user-o', 'url' => ['/gii']],
                         ['label' => 'Debug', 'icon' => 'bug', 'url' => ['/debug']],
                         ['label' => 'Login', 'url' => ['site/login'], 'visible' => Yii::$app->user->isGuest, 'icon' => 'id-card'],

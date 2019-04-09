@@ -9,15 +9,31 @@ $config = [
     'name' => 'Задачник',
     'bootstrap' => ['log'],
     'modules' => [
-        'gridview' =>  [
+        'gridview' => [
             'class' => '\kartik\grid\Module'
         ]
     ],
     'aliases' => [
         '@bower' => '@vendor/bower-asset',
-        '@npm'   => '@vendor/npm-asset',
+        '@npm' => '@vendor/npm-asset',
     ],
     'components' => [
+        'googleDrive' => [
+            'class' => 'lhs\Yii2FlysystemGoogleDrive',
+            'clientId' => '667521552878-91u8dlqf19tgnbfhulohjmg3jmngvosg.apps.googleusercontent.com',
+            'clientSecret' => 'QmYeNv5dHMAgVADUdterUrpb',
+            'refreshToken' => '1/bVn_hdjxQ3CVTsXtNyQyBcEgpvAZPGxRAXikYT4GMZYH4kvl20bt_-QaK1xh3CCw',
+            'rootFolderId' => '1dDERhuGybkoHHsBswt4EbXeLVHlZe9fT'
+        ],
+        'backup' => [
+            'class' => 'demi\backup\Component',
+            // The directory for storing backups files
+            'backupsFolder' => dirname(__DIR__) . '/backups', // <project-root>/backups
+            // Directories that will be added to backup
+            'directories' => [
+                'images' => '@webroot/images',
+            ],
+        ],
         'formatter' => [
             'dateFormat' => 'dd.MM.yyyy',
             'timeFormat' => 'H:i'

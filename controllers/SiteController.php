@@ -3,6 +3,7 @@
 namespace app\controllers;
 
 use Yii;
+use yii\bootstrap\Html;
 use yii\filters\AccessControl;
 use yii\web\Controller;
 use yii\web\Response;
@@ -124,5 +125,45 @@ class SiteController extends Controller
     public function actionAbout()
     {
         return $this->render('about');
+    }
+
+    public function actionDrive()
+    {
+        $content = \Yii::$app->googleDrive->listContents();
+        return $this->render('drive', [
+            'content' => $content,
+        ]);
+    }
+
+    /**
+     * Backup DataBase and directories (settings in config/web.php [backup])
+     * @throws \yii\base\Exception
+     */
+    public function actionBackup()
+    {
+        if (!is_dir('../backups')){
+            mkdir('../backups', 755);
+        }
+
+        /** @var \demi\backup\Component $backup */
+        $backup = \Yii::$app->backup;
+
+        Yii::info(is_dir($backup->getBackupFolder()), 'test');
+
+
+        $file = $backup->create();
+
+        $request = Yii::$app->request;
+
+        if ($request->isAjax) {
+            Yii::$app->response->format = Response::FORMAT_JSON;
+            return [
+                'title' => 'Бэкап проекта',
+                'content' => 'Backup file created: ' . $file . PHP_EOL,
+                'footer' => Html::button('Close', ['class' => 'btn btn-default pull-left', 'data-dismiss' => "modal"])
+            ];
+        }
+        Yii::$app->session->setFlash('success', 'Резервное копирование выполнено успешно! Создан файл: ' . $file . PHP_EOL);
+        return $this->goHome();
     }
 }
