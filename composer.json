@@ -24,7 +24,8 @@
         "kartik-v/yii2-editable": "dev-master",
         "la-haute-societe/yii2-flysystem-google-drive": "~1.0.0",
         "demi/backup": "dev-master",
-        "google/apiclient": "^2.0@dev"
+        "google/apiclient": "^2.0@dev",
+        "mpdf/mpdf": "^7.1.9"
     },
     "require-dev": {
         "yiisoft/yii2-debug": "~2.0.0",
