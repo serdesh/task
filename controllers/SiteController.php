@@ -2,14 +2,18 @@
 
 namespace app\controllers;
 
+use Google_Service_Drive;
+use Google_Service_Drive_DriveFile;
 use Yii;
 use yii\bootstrap\Html;
 use yii\filters\AccessControl;
+use yii\helpers\Url;
 use yii\web\Controller;
 use yii\web\Response;
 use yii\filters\VerbFilter;
 use app\models\LoginForm;
 use app\models\ContactForm;
+
 
 class SiteController extends Controller
 {
@@ -127,13 +131,113 @@ class SiteController extends Controller
         return $this->render('about');
     }
 
-    public function actionDrive()
+    public function actionGoogleDrive()
     {
-        $content = \Yii::$app->googleDrive->listContents();
+        $content = Yii::$app->googleDrive->listContents('', true);
+        return $this->render('gdrive', [
+            'content' => $content,
+        ]);
+    }
+
+    public function actionCreateFile()
+    {
+
+        $content = Yii::$app->googleDrive->put(
+            '1DVejnXOYtgvP-baMRmJhaEZuVatujvwT/testfile2.txt', //Запись в определенную папку
+            'testtestetetfbfj222222222'
+        );
         return $this->render('drive', [
             'content' => $content,
         ]);
     }
+
+    public function actionCreateDir()
+    {
+        $content = Yii::$app->googleDrive->createDir('testDir');
+        return $this->render('drive', [
+            'content' => $content,
+        ]);
+    }
+
+    public function actionDeleteFile()
+    {
+        $content = Yii::$app->googleDrive->delete('1BeCDyHa4que-oMiY-8QYr4i5SI2-Gg_ubciX8CbvFws');
+        return $this->render('drive', [
+            'content' => $content,
+        ]);
+    }
+
+    public function actionDeleteDir()
+    {
+        $content = Yii::$app->googleDrive->deleteDir('1ZYjVRMH2mJEB0aImli6KTGi3DGDhraRr');
+        return $this->render('drive', [
+            'content' => $content,
+        ]);
+    }
+
+    public function actionGetSize()
+    {
+        $content = Yii::$app->googleDrive->getSize('1DVejnXOYtgvP-baMRmJhaEZuVatujvwT');
+        return $this->render('drive', [
+            'content' => $content,
+        ]);
+    }
+
+    public function actionGetTimestamp()
+    {
+        $content = Yii::$app->googleDrive->getTimestamp('1DVejnXOYtgvP-baMRmJhaEZuVatujvwT');
+        $content = Yii::$app->formatter->asDatetime($content);
+        return $this->render('drive', [
+            'content' => $content,
+        ]);
+    }
+
+    public function actionUploadFile()
+    {
+//        $source  = Url::to(['@webroot/images/testfile.txt']);
+//        $source  = 'C:\OSPanel\domains\task\web\images\testfile.txt';
+//        $api_key = 'AIzaSyCgpeu9Y-LYQ4013Ll-fH1fJNodh29pMnY';
+//        $curl_file = curl_file_create($source);
+//        $post = [
+//            'extra_info' => 'Uploaded txt file',
+//            'file_contents'=> $curl_file
+//        ];
+//
+//        $file_size = filesize($source);
+//        Yii::info($file_size, 'test');
+//        $source = 'images/testfile.txt';
+//        $url = 'https://www.googleapis.com/drive/v3/files/FILE_ID?alt=media';
+//        $url = 'https://www.googleapis.com/upload/drive/v3/files?uploadType=resumable';
+
+//        $content = file_get_contents('images/testfile.txt');
+
+//        $authheaders = ["Authorization: Bearer " . $api_key];
+//
+//        $file = fopen($source, 'w');
+//        $ch = curl_init();
+//        curl_setopt($ch, CURLOPT_URL,$url);
+//        curl_setopt($ch, CURLOPT_POST, 1);
+//        curl_setopt($ch, CURLOPT_POSTFIELDS, $post);
+//        curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
+//        curl_setopt($ch, CURLOPT_FILE, $file);
+//        curl_setopt($ch, CURLOPT_HTTPHEADER, $authheaders);
+//        curl_setopt($ch, CURLINFO_CONTENT_LENGTH_UPLOAD,$file_size);
+//        curl_setopt($ch, CURLOPT_USERPWD, "serdesh77@gmail.com:epvewrmorn123987654");
+//        curl_setopt($ch, CURLOPT_POSTFIELDS, $file);
+
+//        $content = curl_exec($ch);
+//        $error = curl_error($ch);
+//        $info = curl_getinfo($ch);
+//        curl_close($ch);
+//        fclose($file);
+
+        return $this->render('gdrive', [
+//            'content' => $content,
+//            'error' => $error,
+//            'info' => $info,
+        ]);
+    }
+
 
     /**
      * Backup DataBase and directories (settings in config/web.php [backup])
@@ -141,7 +245,7 @@ class SiteController extends Controller
      */
     public function actionBackup()
     {
-        if (!is_dir('../backups')){
+        if (!is_dir('../backups')) {
             mkdir('../backups', 755);
         }
 

@@ -43,7 +43,8 @@
                                 ['label' => 'Месенджеры', 'icon' => 'user-o', 'url' => ['/messenger']],
                             ]
                         ],
-                        ['label' => 'GoogleDrive', 'icon' => 'user-o', 'url' => ['/site/drive']],
+                        ['label' => 'GoogleDrive', 'icon' => 'user-o', 'url' => ['/site/google-drive']],
+                        ['label' => 'Drive модуль', 'icon' => 'user-o', 'url' => ['/drive']],
                         ['label' => 'BackUp', 'icon' => 'user-o', 'url' => ['/site/backup']],
                         ['label' => 'Gii', 'icon' => 'user-o', 'url' => ['/gii']],
                         ['label' => 'Debug', 'icon' => 'bug', 'url' => ['/debug']],

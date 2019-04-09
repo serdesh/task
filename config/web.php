@@ -11,7 +11,10 @@ $config = [
     'modules' => [
         'gridview' => [
             'class' => '\kartik\grid\Module'
-        ]
+        ],
+        'drive' => [
+            'class' => 'app\modules\drive\Module',
+        ],
     ],
     'aliases' => [
         '@bower' => '@vendor/bower-asset',
@@ -19,7 +22,7 @@ $config = [
     ],
     'components' => [
         'googleDrive' => [
-            'class' => 'lhs\Yii2FlysystemGoogleDrive',
+            'class' => 'lhs\Yii2FlysystemGoogleDrive\GoogleDriveFilesystem',
             'clientId' => '667521552878-91u8dlqf19tgnbfhulohjmg3jmngvosg.apps.googleusercontent.com',
             'clientSecret' => 'QmYeNv5dHMAgVADUdterUrpb',
             'refreshToken' => '1/bVn_hdjxQ3CVTsXtNyQyBcEgpvAZPGxRAXikYT4GMZYH4kvl20bt_-QaK1xh3CCw',
@@ -36,7 +39,8 @@ $config = [
         ],
         'formatter' => [
             'dateFormat' => 'dd.MM.yyyy',
-            'timeFormat' => 'H:i'
+            'timeFormat' => 'H:i',
+            'datetimeFormat' => 'dd.MM.yyyy H:i:s',
         ],
         'request' => [
             // !!! insert a secret key in the following (if it is empty) - this is required by cookie validation
