@@ -1,5 +1,6 @@
 <?php
 
+use app\models\Task;
 use yii\helpers\Html;
 use yii\bootstrap\Modal;
 use kartik\grid\GridView;
@@ -41,7 +42,7 @@ CrudAsset::register($this);
                     'panel' => [
                         'type' => 'primary',
                         'heading' => '<i class="glyphicon glyphicon-list"></i> Список задач',
-//                    'before' => '<em>* Resize table columns just like a spreadsheet by dragging the column edges.</em>',
+                    'before' => '<em>Время завершенных проектов за текущий месяц: ' . Task::getDoneTimePerMonth() . '</em>',
                         'after' => BulkButtonWidget::widget([
                                 'buttons' => Html::a('<i class="glyphicon glyphicon-trash"></i>&nbsp; Удалить выделенное',
                                     ["bulkdelete"],
@@ -90,6 +91,9 @@ $script = <<<JS
                       select.hide();
                       var td = select.parent('td');
                       td.append('Завершена');
+                      var start_btn = $('#start-btn-' + id);
+                      start_btn.css('display', 'none');
+                      
                   } 
                 }
             )

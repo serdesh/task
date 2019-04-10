@@ -16,6 +16,7 @@ use yii\helpers\ArrayHelper;
  * @property int $status Завершено/В работе
  * @property string $notes заметки
  * @property int $project_id ID проекта
+ * @property string $done_date Дата завершения задачи
  *
  * @property Project $project
  */
@@ -58,7 +59,21 @@ class Task extends ActiveRecord
             'status' => 'Статус',
             'notes' => 'Примечание',
             'project_id' => 'Проект',
+            'done_date' => 'Дата завершения',
         ];
+    }
+
+    public function beforeSave($insert)
+    {
+        if (!$this->done_date && $this->status == self::TASK_STATUS_DONE){
+            //Если нет даты завершения и статус "Завершено"
+            $this->done_date = date('Y-m-d H:i:s', time());
+        } elseif ($this->done_date && $this->status == self::TASK_STATUS_IN_WORK){
+            //Если дата завершения есть и статус задачи "Выполняется"
+            $this->done_date = null;
+        }
+
+        return parent::beforeSave($insert);
     }
 
     /**
@@ -109,17 +124,42 @@ class Task extends ActiveRecord
      '%i Minute %s Seconds'                                        =>  49 Minute 36 Seconds
      '%h Hours                                                    =>  11 Hours
      '%a Days                                                        =>  468 Days
-     * @param string $differenceFormat
      * @return string
      */
-    public static function dateDifference($date_1 , $date_2 , $differenceFormat = '%i' )
+    public static function dateDifference($date_1 , $date_2 )
     {
         $datetime1 = date_create($date_1);
         $datetime2 = date_create($date_2);
 
         $interval = date_diff($datetime1, $datetime2);
 
-        return $interval->format($differenceFormat);
+        $minutes = 0;
+        $hours = $interval->format('%h');
 
+
+        if ($hours > 0) {
+            $minutes = (int)$hours * 60;
+        }
+
+        $minutes +=  (int)$interval->format('%i');
+
+        return $minutes;
+
+    }
+
+    public static function getDoneTimePerMonth()
+    {
+        $all_min = self::find()
+            ->where(['status' => self::TASK_STATUS_DONE])
+//            ->andWhere(['BETWEEN', 'done_date' , date('Y-m-01 00:00:00', time()), date('Y-m-d H:i:s', time())])
+            ->sum('all_time');
+
+        $hour = (int)($all_min / 60);
+
+        if ($hour < 1) $hour = 0;
+
+        $min = $all_min - ($hour * 60);
+
+        return $hour . 'ч. ' . $min . 'мин.';
     }
 }

@@ -2,18 +2,15 @@
 
 namespace app\controllers;
 
-use Google_Service_Drive;
-use Google_Service_Drive_DriveFile;
 use Yii;
 use yii\bootstrap\Html;
 use yii\filters\AccessControl;
-use yii\helpers\Url;
 use yii\web\Controller;
 use yii\web\Response;
 use yii\filters\VerbFilter;
 use app\models\LoginForm;
 use app\models\ContactForm;
-
+use app\components\AuthHandler;
 
 class SiteController extends Controller
 {
@@ -49,6 +46,10 @@ class SiteController extends Controller
     public function actions()
     {
         return [
+            'auth' => [
+                'class' => 'yii\authclient\AuthAction',
+                'successCallback' => [$this, 'onAuthSuccess'],
+            ],
             'error' => [
                 'class' => 'yii\web\ErrorAction',
             ],
@@ -57,6 +58,16 @@ class SiteController extends Controller
                 'fixedVerifyCode' => YII_ENV_TEST ? 'testme' : null,
             ],
         ];
+    }
+
+    /**
+     * @param $client
+     * @throws \yii\base\Exception
+     * @throws \yii\db\Exception
+     */
+    public function onAuthSuccess($client)
+    {
+        (new AuthHandler($client))->handle();
     }
 
     /**
@@ -133,9 +144,14 @@ class SiteController extends Controller
 
     public function actionGoogleDrive()
     {
-        $content = Yii::$app->googleDrive->listContents('', true);
+//        $content = Yii::$app->googleDrive->listContents('', true);
+        $content = 'Отключено';
+
+        $client = '';
+
         return $this->render('gdrive', [
             'content' => $content,
+            'client' => $client,
         ]);
     }
 
@@ -237,7 +253,6 @@ class SiteController extends Controller
 //            'info' => $info,
         ]);
     }
-
 
     /**
      * Backup DataBase and directories (settings in config/web.php [backup])

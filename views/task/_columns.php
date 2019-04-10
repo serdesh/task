@@ -71,11 +71,12 @@ return [
                 if ($data->start) {
                     return Html::a('Стоп', ['start-task', 'id' => $data->id], [
                         'class' => 'btn btn-danger',
+                        'id' => 'start-btn-' . $data->id,
                     ]);
                 }
                 return Html::a('Старт', ['start-task', 'id' => $data->id], [
                     'class' => 'btn btn-success',
-
+                    'id' => 'start-btn-' . $data->id,
                 ]);
             }
             return '';

@@ -134,14 +134,16 @@ class TaskController extends Controller
 
                 ];
             } else if ($model->load($request->post()) && $model->save()) {
-                return [
-                    'forceReload' => '#crud-datatable-pjax',
-                    'title' => "Create new Task",
-                    'content' => '<span class="text-success">Create Task success</span>',
-                    'footer' => Html::button('Close', ['class' => 'btn btn-default pull-left', 'data-dismiss' => "modal"]) .
-                        Html::a('Create More', ['create'], ['class' => 'btn btn-primary', 'role' => 'modal-remote'])
+                return $this->redirect('/task/index');
 
-                ];
+//                return [
+//                    'forceReload' => '#crud-datatable-pjax',
+//                    'title' => "Create new Task",
+//                    'content' => '<span class="text-success">Create Task success</span>',
+//                    'footer' => Html::button('Close', ['class' => 'btn btn-default pull-left', 'data-dismiss' => "modal"]) .
+//                        Html::a('Create More', ['create'], ['class' => 'btn btn-primary', 'role' => 'modal-remote'])
+//
+//                ];
             } else {
                 return [
                     'title' => "Create new Task",
@@ -196,15 +198,17 @@ class TaskController extends Controller
                         Html::button('Save', ['class' => 'btn btn-primary', 'type' => "submit"])
                 ];
             } else if ($model->load($request->post()) && $model->save()) {
-                return [
-                    'forceReload' => '#crud-datatable-pjax',
-                    'title' => "Task #" . $id,
-                    'content' => $this->renderAjax('view', [
-                        'model' => $model,
-                    ]),
-                    'footer' => Html::button('Close', ['class' => 'btn btn-default pull-left', 'data-dismiss' => "modal"]) .
-                        Html::a('Edit', ['update', 'id' => $id], ['class' => 'btn btn-primary', 'role' => 'modal-remote'])
-                ];
+                    return $this->redirect('/task/index');
+//                return [
+//                    'forceReload' => '#crud-datatable-pjax',
+//                    'forceClose' => true,
+//                    'title' => "Task #" . $id,
+//                    'content' => $this->renderAjax('view', [
+//                        'model' => $model,
+//                    ]),
+//                    'footer' => Html::button('Close', ['class' => 'btn btn-default pull-left', 'data-dismiss' => "modal"]) .
+//                        Html::a('Edit', ['update', 'id' => $id], ['class' => 'btn btn-primary', 'role' => 'modal-remote'])
+//                ];
             } else {
                 return [
                     'title' => "Update Task #" . $id,
@@ -339,7 +343,10 @@ class TaskController extends Controller
             //Если есть начало периода - к общему времени добавляем прошедшее время между началом и текущим моментом
             $date_diff = Task::dateDifference(date('Y-m-d H:i', time()), $model->start); //Разница в минутах
 
+//            $test_date_diff = Task::dateDifference(date('Y-m-d H:i', time()), date('Y-m-09 H:i:s', time()));
+
             Yii::info('Date-diff(min): ' . $date_diff, 'test');
+//            Yii::info('Test Date-diff(min): ' . $test_date_diff, 'test');
 
             $all_time = $model->all_time;
 

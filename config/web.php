@@ -8,6 +8,7 @@ $config = [
     'basePath' => dirname(__DIR__),
     'name' => 'Задачник',
     'bootstrap' => ['log'],
+//    'returnUrl' => 'localhost',
     'modules' => [
         'gridview' => [
             'class' => '\kartik\grid\Module'
@@ -21,12 +22,29 @@ $config = [
         '@npm' => '@vendor/npm-asset',
     ],
     'components' => [
+        'authClientCollection' => [
+            'class' => 'yii\authclient\Collection',
+            'clients' => [
+                'google' => [
+                    'class' => 'yii\authclient\clients\Google',
+                    'clientId' => '667521552878-91u8dlqf19tgnbfhulohjmg3jmngvosg.apps.googleusercontent.com',
+                    'clientSecret' => 'QmYeNv5dHMAgVADUdterUrpb',
+                    'returnUrl' => 'http://localhost/drive',
+                ],
+//                'facebook' => [
+//                    'class' => 'yii\authclient\clients\Facebook',
+//                    'clientId' => 'facebook_client_id',
+//                    'clientSecret' => 'facebook_client_secret',
+//                ],
+                // etc.
+            ],
+        ],
         'googleDrive' => [
             'class' => 'lhs\Yii2FlysystemGoogleDrive\GoogleDriveFilesystem',
             'clientId' => '667521552878-91u8dlqf19tgnbfhulohjmg3jmngvosg.apps.googleusercontent.com',
             'clientSecret' => 'QmYeNv5dHMAgVADUdterUrpb',
             'refreshToken' => '1/bVn_hdjxQ3CVTsXtNyQyBcEgpvAZPGxRAXikYT4GMZYH4kvl20bt_-QaK1xh3CCw',
-            'rootFolderId' => '1dDERhuGybkoHHsBswt4EbXeLVHlZe9fT'
+            'rootFolderId' => '1dDERhuGybkoHHsBswt4EbXeLVHlZe9fT',
         ],
         'backup' => [
             'class' => 'demi\backup\Component',

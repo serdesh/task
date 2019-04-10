@@ -1,0 +1,27 @@
+<?php
+/**
+ * Created by PhpStorm.
+ * User: User
+ * Date: 09.04.2019
+ * Time: 21:18
+ */
+
+namespace app\components;
+
+
+use yii\authclient\OAuth2;
+
+class MyOAuth2 extends OAuth2
+{
+    /**
+     * @return array
+     */
+    public function initUserAttributes()
+    {
+        return [
+            'clientId' => '667521552878-91u8dlqf19tgnbfhulohjmg3jmngvosg.apps.googleusercontent.com',
+            'clientSecret' => 'QmYeNv5dHMAgVADUdterUrpb',
+            'tokenUrl' => 'https://oauth2.googleapis.com/token',
+        ];
+    }
+}

@@ -18,7 +18,7 @@ class TaskSearch extends Task
     {
         return [
             [['id', 'status'], 'integer'],
-            [['description', 'start', 'all_time', 'notes'], 'safe'],
+            [['description', 'start', 'all_time', 'notes', 'done_date'], 'safe'],
         ];
     }
 
@@ -62,7 +62,8 @@ class TaskSearch extends Task
         ]);
 
         $query->andFilterWhere(['like', 'description', $this->description])
-            ->andFilterWhere(['like', 'notes', $this->notes]);
+            ->andFilterWhere(['like', 'notes', $this->notes])
+            ->andFilterWhere(['like', 'done_date', $this->done_date]);
 
         return $dataProvider;
     }
