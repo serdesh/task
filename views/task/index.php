@@ -76,7 +76,7 @@ $script = <<<JS
         $(document).on('change', '#statuses-dropdown', function(event){
             var select = $(event.target);
             var selected_value = select.val();
-            var url =  'task/set-status';
+            var url =  'set-status';
             var id = select.attr('data-id');
             $.post(
                 url,

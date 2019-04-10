@@ -364,14 +364,20 @@ class TaskController extends Controller
                     Yii::$app->session->setFlash('error', 'Ошибка сохранения общего времени');
                 } else {
                     $model->start = null;
-                    $model->save();
+                    if (!$model->save()){
+                        Yii::error($model->errors, __METHOD__);
+                        Yii::$app->session->setFlash('error', 'Ошибка обнуления старт/стоп');
+                    }
                 }
             }
         } else {
             $model->start = date('Y-m-d H:i', time());
-            $model->save();
+            if (!$model->save()){
+                Yii::error($model->errors, __METHOD__);
+                Yii::$app->session->setFlash('error', 'Ошибка сохранения старт/стоп');
+            }
         }
-        return $this->redirect(['index']);
+        return $this->redirect('/task/index');
     }
 
     /**

@@ -3,6 +3,7 @@
 namespace app\models;
 
 use app\models\query\TaskQuery;
+use yii\db\ActiveQuery;
 use yii\db\ActiveRecord;
 use yii\helpers\ArrayHelper;
 
@@ -65,10 +66,10 @@ class Task extends ActiveRecord
 
     public function beforeSave($insert)
     {
-        if (!$this->done_date && $this->status == self::TASK_STATUS_DONE){
+        if (!$this->done_date && $this->status == self::TASK_STATUS_DONE) {
             //Если нет даты завершения и статус "Завершено"
             $this->done_date = date('Y-m-d H:i:s', time());
-        } elseif ($this->done_date && $this->status == self::TASK_STATUS_IN_WORK){
+        } elseif ($this->done_date && $this->status == self::TASK_STATUS_IN_WORK) {
             //Если дата завершения есть и статус задачи "Выполняется"
             $this->done_date = null;
         }
@@ -85,6 +86,16 @@ class Task extends ActiveRecord
     }
 
     /**
+     * @return ActiveQuery
+     * @throws \yii\base\InvalidConfigException
+     */
+    public function getBoss()
+    {
+        return $this->hasOne(Boss::className(), ['id' => 'boss_id'])
+            ->viaTable('project', ['id' => 'project_id']);
+    }
+
+    /**
      * {@inheritdoc}
      * @return TaskQuery the active query used by this AR class.
      */
@@ -93,8 +104,9 @@ class Task extends ActiveRecord
         return new TaskQuery(get_called_class());
     }
 
-    public static function getStatusName($status_value){
-        if ($status_value == self::TASK_STATUS_IN_WORK){
+    public static function getStatusName($status_value)
+    {
+        if ($status_value == self::TASK_STATUS_IN_WORK) {
             return 'В работе';
         }
 
@@ -104,10 +116,11 @@ class Task extends ActiveRecord
     /**
      * @return array
      */
-    public static function getStatusList() {
+    public static function getStatusList()
+    {
         return ArrayHelper::map([
-           ['id' => self::TASK_STATUS_IN_WORK, 'name' => 'В работе'],
-           ['id' => self::TASK_STATUS_DONE, 'name' => 'Завершена'],
+            ['id' => self::TASK_STATUS_IN_WORK, 'name' => 'В работе'],
+            ['id' => self::TASK_STATUS_DONE, 'name' => 'Завершена'],
         ], 'id', 'name');
     }
 
@@ -115,18 +128,18 @@ class Task extends ActiveRecord
      * @param string $date_1 Date Should In YYYY-MM-DD Format
      * @param string $date_2 Date Should In YYYY-MM-DD Format
      * RESULT FORMAT:
-     '%y Year %m Month %d Day %h Hours %i Minute %s Seconds'        =>  1 Year 3 Month 14 Day 11 Hours 49 Minute 36 Seconds
-     '%y Year %m Month %d Day'                                    =>  1 Year 3 Month 14 Days
-     '%m Month %d Day'                                            =>  3 Month 14 Day
-     '%d Day %h Hours'                                            =>  14 Day 11 Hours
-     '%d Day'                                                        =>  14 Days
-     '%h Hours %i Minute %s Seconds'                                =>  11 Hours 49 Minute 36 Seconds
-     '%i Minute %s Seconds'                                        =>  49 Minute 36 Seconds
-     '%h Hours                                                    =>  11 Hours
-     '%a Days                                                        =>  468 Days
+     * '%y Year %m Month %d Day %h Hours %i Minute %s Seconds'        =>  1 Year 3 Month 14 Day 11 Hours 49 Minute 36 Seconds
+     * '%y Year %m Month %d Day'                                    =>  1 Year 3 Month 14 Days
+     * '%m Month %d Day'                                            =>  3 Month 14 Day
+     * '%d Day %h Hours'                                            =>  14 Day 11 Hours
+     * '%d Day'                                                        =>  14 Days
+     * '%h Hours %i Minute %s Seconds'                                =>  11 Hours 49 Minute 36 Seconds
+     * '%i Minute %s Seconds'                                        =>  49 Minute 36 Seconds
+     * '%h Hours                                                    =>  11 Hours
+     * '%a Days                                                        =>  468 Days
      * @return string
      */
-    public static function dateDifference($date_1 , $date_2 )
+    public static function dateDifference($date_1, $date_2)
     {
         $datetime1 = date_create($date_1);
         $datetime2 = date_create($date_2);
@@ -141,7 +154,7 @@ class Task extends ActiveRecord
             $minutes = (int)$hours * 60;
         }
 
-        $minutes +=  (int)$interval->format('%i');
+        $minutes += (int)$interval->format('%i');
 
         return $minutes;
 
@@ -150,9 +163,11 @@ class Task extends ActiveRecord
     public static function getDoneTimePerMonth()
     {
         $all_min = self::find()
-            ->where(['status' => self::TASK_STATUS_DONE])
-//            ->andWhere(['BETWEEN', 'done_date' , date('Y-m-01 00:00:00', time()), date('Y-m-d H:i:s', time())])
-            ->sum('all_time');
+            ->joinWith(['boss b'])
+            ->andWhere(['<>', 'b.name', 'Desh'])
+            ->andWhere(['task.status' => self::TASK_STATUS_DONE])
+            ->andWhere(['BETWEEN', 'task.done_date', date('Y-m-01 00:00:00', time()), date('Y-m-d H:i:s', time())])
+            ->sum('task.all_time');
 
         $hour = (int)($all_min / 60);
 
