@@ -2,6 +2,9 @@
 
 namespace app\models;
 
+use app\models\query\AuthQuery;
+use yii\db\ActiveRecord;
+
 /**
  * This is the model class for table "auth".
  *
@@ -12,7 +15,7 @@ namespace app\models;
  *
  * @property User $user
  */
-class Auth extends \yii\db\ActiveRecord
+class Auth extends ActiveRecord
 {
     /**
      * {@inheritdoc}
@@ -58,10 +61,10 @@ class Auth extends \yii\db\ActiveRecord
 
     /**
      * {@inheritdoc}
-     * @return \app\models\query\AuthQuery the active query used by this AR class.
+     * @return AuthQuery the active query used by this AR class.
      */
     public static function find()
     {
-        return new \app\models\query\AuthQuery(get_called_class());
+        return new AuthQuery(get_called_class());
     }
 }

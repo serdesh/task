@@ -31,11 +31,11 @@ $config = [
                     'clientSecret' => 'QmYeNv5dHMAgVADUdterUrpb',
                     'returnUrl' => 'http://localhost/drive',
                 ],
-//                'facebook' => [
-//                    'class' => 'yii\authclient\clients\Facebook',
-//                    'clientId' => 'facebook_client_id',
-//                    'clientSecret' => 'facebook_client_secret',
-//                ],
+                'facebook' => [
+                    'class' => 'yii\authclient\clients\Facebook',
+                    'clientId' => 'facebook_client_id',
+                    'clientSecret' => 'facebook_client_secret',
+                ],
                 // etc.
             ],
         ],

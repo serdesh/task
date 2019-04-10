@@ -76,16 +76,15 @@ if (isset($info)) {
 
 $client = new Google_Client();
 $client->setApplicationName('My GoogleBook Test App');
+$client->setRedirectUri(Url::to('/site/google-drive'));
 $service = new Google_Service_Books($client);
 $optParams = ['filter' => 'free-ebooks'];
 $results = $service->volumes->listVolumes('Henry David Thoreau', $optParams);
 
 //VarDumper::dump($results, 10, true);
 foreach ($results as $item) {
-    echo $item['volumeInfo']['title'], "<br /> \n";
+    echo $item['volumeInfo']['title'], "<br />";
 }
-
-
 
 //$client->setClientId('667521552878-91u8dlqf19tgnbfhulohjmg3jmngvosg.apps.googleusercontent.com');
 //$client->refreshToken('1/bVn_hdjxQ3CVTsXtNyQyBcEgpvAZPGxRAXikYT4GMZYH4kvl20bt_-QaK1xh3CCw');
