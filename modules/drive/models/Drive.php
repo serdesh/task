@@ -28,15 +28,12 @@ class Drive
     public static function getClient()
     {
 
-        define('STDIN', fopen("php://stdin", "r"));
-
         $client = new Google_Client();
         $client->setApplicationName('Google Drive API PHP Test');
-        $client->setScopes(Google_Service_Drive::DRIVE_METADATA_READONLY);
+        $client->setScopes(Google_Service_Drive::DRIVE_FILE);
         $client->setAuthConfig(Url::to('@app/credentials.json'));
         $client->setAccessType('offline');
         $client->setPrompt('select_account consent');
-//        $client->
 
         Yii::info($client->getLibraryVersion(), 'test');
 
@@ -50,35 +47,48 @@ class Drive
             $client->setAccessToken($accessToken);
         } else {
             Yii::info('No accessToken file', 'test');
-            $client->setAccessToken([
-                'access_token' => 'ya29.GlvmBnk6UwMvgMdRGw7MnILRIdKyl_sbqgep1JHBdKMf2zuxjwy2pJOZ7XOMpk0_xhov6gGF3Qot4gpIR0PTxIqIpVdvImac5_vmhQQwVM0s8Zr4ycowpKIOPKeo',
-                'expires_in' => 3000,
-                'created' => time(),
-            ]);
+//
+//            $client->setAccessToken([
+//                'access_token' => 'ya29.GlzmBl7E09k3JAPvjnoqIhlY_lwPVY3I4trtVITuOiruvyIqUNgh-ihY84js_Q03p4Q53C53QQKPG_7hsG_wqrDmoQFpdddXu0nY6gGaGVYWFJA8PSfZkKt_CLaNLA',
+//                'refresh_token' => '1/X2W97R6HWFgCpR9_xmVPTCFWQZhLgwyiTRMCbBqWy-w',
+//                'expires_in' => 3000,
+//                'created' => time(),
+//            ]);
             Yii::info('Access Token' , 'test');
             Yii::info($client->getAccessToken(), 'test');
         }
 
         // If there is no previous token or it's expired.
         if ($client->isAccessTokenExpired()) {
-            Yii::info('AccessToken is expired', 'test');
+            Yii::info('AccessToken is nothing or expired', 'test');
 
             // Refresh the token if possible, else fetch a new one.
             if ($client->getRefreshToken()) {
                 $client->fetchAccessTokenWithRefreshToken($client->getRefreshToken());
             } else {
                 // Request authorization from the user.
+                $client->setRedirectUri(Url::to('/drive', true));
+                $client->setAccessType('offline');
+                $client->setState(null);
+                $client->setPrompt(null);
+                $client->setApprovalPrompt('null');
+                $accessToken = $client->fetchAccessTokenWithRefreshToken('1/X2W97R6HWFgCpR9_xmVPTCFWQZhLgwyiTRMCbBqWy-w');
                 $authUrl = $client->createAuthUrl();
-                printf("Open the following link in your browser:\n%s\n", $authUrl);
-                echo 'Enter verification code: ';
+
+//                printf("Open the following link in your browser:\n%s\n", $authUrl);
+//                echo 'Enter verification code: ';
 
                 Yii::info('Auth Url: ' .  $authUrl, 'test');
 
-                $authCode = trim(fgets(STDIN));
+//                $auth_response = file_get_contents($authUrl);
 
+//                Yii::info('Auth response: ' . $auth_response, 'test');
+
+//                $authCode = trim(fgets(STDIN));
+//                $authCode = '';
                 // Exchange authorization code for an access token.
-                Yii::info('AuthCode: ' . $authCode, 'test');
-                $accessToken = $client->fetchAccessTokenWithAuthCode($authCode);
+//                Yii::info('AuthCode: ' . $authCode, 'test');
+//                $accessToken = $client->fetchAccessTokenWithAuthCode($authCode);
                 $client->setAccessToken($accessToken);
 
                 // Check to see if there was an error.

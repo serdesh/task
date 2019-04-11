@@ -20,7 +20,7 @@ all commands https://github.com/creocoder/yii2-flysystem/blob/master/src/Filesys
 <?php
 if (isset($error)) {
     VarDumper::dump($error, 10, true);
-}?>
+} ?>
 <h3>Информация</h3>
 <?php
 if (isset($info)) {
@@ -66,7 +66,6 @@ if (isset($info)) {
 } ?>
 
 
-
 <h3>Пример с Google books</h3>
 <?php
 //Yii::$app->controller->enableCsrfValidation = false;
@@ -85,7 +84,27 @@ $results = $service->volumes->listVolumes('Henry David Thoreau', $optParams);
 foreach ($results as $item) {
     echo $item['volumeInfo']['title'], "<br />";
 }
-
+?>
+<div class="container">
+    <div class="row">
+        <div class="col-xs-3">
+            <?= Html::a('Получить Token', ['/site/get-token'], ['class' => 'btn btn-info']) ?>
+        </div>
+        <div class="col-xs-9">
+            <p><?= isset($access_token) ? VarDumper::dump($access_token, 10, true) : 'Access Token not found' ?></p>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-xs-12">
+            <?php
+                if (isset($auth_form)){
+                    echo $auth_form;
+                }
+            ?>
+        </div>
+    </div>
+</div>
+<?php
 //$client->setClientId('667521552878-91u8dlqf19tgnbfhulohjmg3jmngvosg.apps.googleusercontent.com');
 //$client->refreshToken('1/bVn_hdjxQ3CVTsXtNyQyBcEgpvAZPGxRAXikYT4GMZYH4kvl20bt_-QaK1xh3CCw');
 //$client->setClientSecret('QmYeNv5dHMAgVADUdterUrpb');
@@ -269,4 +288,8 @@ foreach ($results as $item) {
 //    echo '</pre>';
 //}
 ?>
-<?php VarDumper::dump($content, 10, true); ?>
+<?php
+if (isset($content)){
+    VarDumper::dump($content, 10, true);
+}
+?>
