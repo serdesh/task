@@ -61,6 +61,8 @@ CrudAsset::register($this);
             Yii::error($e->getTraceAsString(), __METHOD__);
         } ?>
     </div>
+    <?= Html::a('<i class="glyphicon glyphicon-plus">FFFFF</i>', ['add-empty-task'],
+        ['role' => 'modal-remote', 'title' => 'Create new Tasks', 'class' => 'btn btn-default'])?>
 </div>
 <?php Modal::begin([
     "id"=>"ajaxCrudModal",

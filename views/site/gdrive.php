@@ -3,8 +3,10 @@
 use app\components\AuthHandler;
 use app\components\MyOAuth2;
 use app\models\User;
+use johnitvn\ajaxcrud\CrudAsset;
 use yii\authclient\OAuth2;
 use yii\bootstrap\Html;
+use yii\bootstrap\Modal;
 use yii\helpers\Url;
 use yii\helpers\VarDumper;
 
@@ -14,6 +16,8 @@ use yii\helpers\VarDumper;
  * @var $client
 all commands https://github.com/creocoder/yii2-flysystem/blob/master/src/Filesystem.php
  */
+CrudAsset::register($this);
+
 ?>
 <h1>Это тестовая страница GoogleDrive</h1>
 <h3>Ошибки</h3>
@@ -27,32 +31,37 @@ if (isset($info)) {
     VarDumper::dump($info, 10, true);
 }
 ?>
-
-<div class="container">
-    <div class="row">
-        <div class="col-xs-3">
-            <?= Html::a('Добавить папку', ['create-dir'], ['class' => 'btn btn-success']); ?>
-        </div>
-        <div class="col-xs-3">
-            <?= Html::a('Создать файл с текстом', ['create-file'], ['class' => 'btn btn-info']); ?>
-        </div>
-        <div class="col-xs-3">
-            <?= Html::a('Удалить файл', ['delete-file'], ['class' => 'btn btn-warning']); ?>
-        </div>
-        <div class="col-xs-3">
-            <?= Html::a('Удалить папку', ['delete-dir'], ['class' => 'btn btn-danger']); ?>
-        </div>
+<div class="row">
+    <div class="col-xs-3">
+        <?= Html::a('Добавить папку', ['create-dir'], ['class' => 'btn btn-success']); ?>
     </div>
-    <div class="row">
-        <div class="col-xs-3">
-            <?= Html::a('Получить размер папки', ['get-size'], ['class' => 'btn btn-info']); ?>
+    <div class="col-xs-3">
+        <?= Html::a('Создать файл с текстом', ['create-file'], ['class' => 'btn btn-info']); ?>
+    </div>
+    <div class="col-xs-3">
+        <?= Html::a('Удалить файл', ['delete-file'], ['class' => 'btn btn-warning']); ?>
+    </div>
+    <div class="col-xs-3">
+        <?= Html::a('Удалить папку', ['delete-dir'], ['class' => 'btn btn-danger']); ?>
+    </div>
+</div>
+<div class="row">
+    <div class="col-xs-3">
+        <?= Html::a('Получить размер папки', ['get-size'], ['class' => 'btn btn-info']); ?>
+    </div>
+    <div class="col-xs-3">
+        <div class="btn-toolbar">
+            <div class="btn-group">
+                <?= Html::a('Получить время папки', ['get-timestamp'], [
+                    'role' => 'modal-remote',
+                    'class' => 'btn btn-info',
+                ]); ?>
+            </div>
         </div>
-        <div class="col-xs-3">
-            <?= Html::a('Получить время папки', ['get-timestamp'], ['class' => 'btn btn-info']); ?>
-        </div>
-        <div class="col-xs-3">
-            <?= Html::a('Загрузить файл', ['upload-file'], ['class' => 'btn btn-default']); ?>
-        </div>
+
+    </div>
+    <div class="col-xs-3">
+        <?= Html::a('Загрузить файл', ['upload-file'], ['class' => 'btn btn-default']); ?>
     </div>
 </div>
 <?php try {
@@ -97,10 +106,33 @@ foreach ($results as $item) {
     <div class="row">
         <div class="col-xs-12">
             <?php
-                if (isset($auth_form)){
-                    echo $auth_form;
-                }
+            if (isset($auth_form)) {
+                echo $auth_form;
+            }
             ?>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-xs-12">
+            <?php
+            if (isset($files)) {
+                foreach ($files as $file) {
+                    echo $file->name . '(' . $file->id . ')<br>';
+//                        VarDumper::dump($file, 10, true);
+                }
+            }
+            ?>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-xs-4">
+            <?php if (isset($folder)) VarDumper::dump($folder, 10, true) ?>
+        </div>
+        <div class="col-xs-4">
+            <h3><?php if (isset($uploads_file)) echo $uploads_file?></h3>
+        </div>
+        <div class="col-xs-4">
+
         </div>
     </div>
 </div>
@@ -289,7 +321,14 @@ foreach ($results as $item) {
 //}
 ?>
 <?php
-if (isset($content)){
+if (isset($content)) {
     VarDumper::dump($content, 10, true);
 }
 ?>
+<?php Modal::begin([
+    "id" => "ajaxCrudModal",
+    "footer" => "",// always need it for jquery plugin
+]) ?>
+<?php Modal::end(); ?>
+
+

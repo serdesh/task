@@ -80,10 +80,15 @@ class Auth extends ActiveRecord
         return self::find()->andWhere(['user_id' => Yii::$app->user->id])->one()->google_refresh_token ?? null;
     }
 
-    public static function setRefreshToken($token)
+    public static function setRefreshToken($token = null)
     {
-        $model = self::find()->where([['user_id' => Yii::$app->user->id]])->one();
+        if (!$token) return null;
+        $model = self::find()->where([['user_id' => Yii::$app->user->id]])->one() ?? null;
 
+        if (!$model){
+            $model = new Auth();
+            $model->user_id = Yii::$app->user->id;
+        }
         $model->google_refresh_token = $token;
 
         if (!$model->save()){

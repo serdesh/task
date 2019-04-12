@@ -2,6 +2,7 @@
 
 use app\models\Project;
 use app\models\Task;
+use kartik\editable\Editable;
 use yii\bootstrap\Html;
 use yii\helpers\Url;
 
@@ -25,6 +26,12 @@ return [
         'attribute' => 'description',
         'editableOptions' => [
             'asPopover' => false,
+            'inputType' => Editable::INPUT_TEXTAREA,
+            'size'=>'lg',
+            'options' => [
+                'class'=>'form-control',
+                'rows'=>5,
+                'placeholder'=>'Введите задачу...']
         ],
     ],
     [

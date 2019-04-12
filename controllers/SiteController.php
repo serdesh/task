@@ -5,6 +5,7 @@ namespace app\controllers;
 use app\models\Auth;
 use Google_Client;
 use Google_Service_Drive;
+use Google_Service_Drive_DriveFile;
 use GuzzleHttp\Client;
 use Yii;
 use yii\bootstrap\Html;
@@ -175,7 +176,7 @@ class SiteController extends Controller
 
     public function actionCreateDir()
     {
-        $content = Yii::$app->googleDrive->createDir('testDir');
+        $content = Yii::$app->googleDrive->createDir('Моя2 новая папка');
         return $this->render('gdrive', [
             'content' => $content,
         ]);
@@ -191,7 +192,7 @@ class SiteController extends Controller
 
     public function actionDeleteDir()
     {
-        $content = Yii::$app->googleDrive->deleteDir('1ZYjVRMH2mJEB0aImli6KTGi3DGDhraRr');
+        $content = Yii::$app->googleDrive->deleteDir('testDir');
         return $this->render('gdrive', [
             'content' => $content,
         ]);
@@ -207,6 +208,14 @@ class SiteController extends Controller
 
     public function actionGetTimestamp()
     {
+
+        if (Yii::$app->request->isAjax) {
+            Yii::$app->response->format = Response::FORMAT_JSON;
+            return [
+                'title' => "Дата папки " . Yii::$app->googleDrive->getName('1DVejnXOYtgvP-baMRmJhaEZuVatujvwT'),
+                'content' => date('d.m.Y H:i', Yii::$app->googleDrive->getTimestamp('1DVejnXOYtgvP-baMRmJhaEZuVatujvwT')),
+            ];
+        }
         $content = Yii::$app->googleDrive->getTimestamp('1DVejnXOYtgvP-baMRmJhaEZuVatujvwT');
         $content = Yii::$app->formatter->asDatetime($content);
         return $this->render('gdrive', [
@@ -268,7 +277,9 @@ class SiteController extends Controller
         $request = Yii::$app->request;
         $auth_code = $request->get('code');
 
-        $redirect_uri = 'http://localhost/site/get-refresh-token';
+        //https://accounts.google.com/o/oauth2/auth?response_type=code&redirect_uri=http%3A%2F%2Flocalhost%2Fsite%2Fget-token&client_id=667521552878-91u8dlqf19tgnbfhulohjmg3jmngvosg.apps.googleusercontent.com&scope=https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fdrive.file&access_type=offline&approval_prompt=auto
+
+        $redirect_uri = 'http://localhost/site/get-token';
 
         $client = new Google_client();
         $client->setAuthConfig(Url::to('@app/credentials.json'));
@@ -282,20 +293,20 @@ class SiteController extends Controller
             //Если есть файл токен доступа
             $access_token = Json::decode(file_get_contents($token_path));
             $client->setAccessToken($access_token);
-        }
-        elseif ($auth_code){
+        } elseif ($auth_code) {
             //Если есть код доступа
             $access_token = $client->fetchAccessTokenWithAuthCode($auth_code);
+            Yii::info($access_token, 'test');
             $client->setAccessToken($access_token);
             Auth::setRefreshToken($client->getRefreshToken());
-        }
-        else {
+        } else {
             //Если нет файла токена доступа
-            $refresh_token= Auth::getGoogleRefreshToken(); //Берем Refresh ТОкен из базы
+            $refresh_token = Auth::getGoogleRefreshToken(); //Берем Refresh ТОкен из базы
 
-            if ($refresh_token){
+            if ($refresh_token) {
                 //Если Refresh Token найден получаем по нему новый Access Token
                 $access_token = $client->fetchAccessTokenWithRefreshToken($refresh_token);
+                Yii::info($access_token, 'test');
                 $client->setAccessToken($access_token);
             } else {
                 //Запрашиваем код доступа
@@ -308,24 +319,27 @@ class SiteController extends Controller
                     'approval_prompt' => 'auto',
                 ];
 
-                $get_data = 'https://accounts.google.com/o/oauth2/auth?' . http_build_query($data);
+                $get_data = http_build_query($data);
 
-                Yii::info($get_data, 'test');
+                Yii::info('https://accounts.google.com/o/oauth2/auth?' . $get_data, 'test');
+
+                $this->redirect('https://accounts.google.com/o/oauth2/auth?' . $get_data);
 
                 $guzzle_client = new Client();
-                $response = $guzzle_client->request('GET', $get_data)->getBody();
+                $response = $guzzle_client->request('GET', 'https://accounts.google.com/o/oauth2/auth?', $data)->getBody();
 
                 Yii::info($response, 'test');
-                //Открываем страницу с аутентификацией
-                return $this->render('gdrive',[
+
+//                Открываем страницу с аутентификацией
+                return $this->render('gdrive', [
                     'auth_form' => $response,
                 ]);
             }
         }
 
-        if ($client->isAccessTokenExpired()){
+        if ($client->isAccessTokenExpired()) {
             //Если токен просрочен - получаем новый
-            $access_token = $client->fetchAccessTokenWithRefreshToken();
+            $access_token = $client->fetchAccessTokenWithRefreshToken($client->getRefreshToken());
             $client->setAccessToken($access_token);
         }
 
@@ -336,19 +350,48 @@ class SiteController extends Controller
             return $this->render('gdrive');
         }
 
-            if ($access_token) {
+        if ($access_token) {
             //Сохраняем токен доступа
-                if (!file_exists($token_path)) {
-                    file_put_contents($token_path, json_encode($client->getAccessToken()));
-                }
+            if (!file_exists($token_path)) {
+                file_put_contents($token_path, json_encode($client->getAccessToken()));
+            }
+
+            Yii::info($client->createAuthUrl(), 'test');
+
+            $driveService = new Google_Service_Drive($client);
+
+            //Создание папки
+//            $fileMetadata = new Google_Service_Drive_DriveFile(array(
+//                'name' => 'Invoices',
+//                'mimeType' => 'application/vnd.google-apps.folder'));
+//            $file = $driveService->files->create($fileMetadata, array(
+//                'fields' => 'id'));
+//           $folder = ['ID папки: ' . $file->id];
+
+            //Добавление файла
+//            $fileMetadata = new Google_Service_Drive_DriveFile(array(
+//                'name' => '2019_04_09-09_44_25.tar'));
+//            $content = file_get_contents(Url::to('@app/backups/2019_04_09-09_44_25.tar'));
+//            $file = $driveService->files->create($fileMetadata, array(
+//                'data' => $content,
+//                'mimeType' => 'application/x-tar',
+//                'uploadType' => 'multipart',
+//                'fields' => 'name'));
+//            $uploads_file = "File name: " . $file->name;
+
+            $files = $driveService->files->listFiles(array())->getFiles(); //Получение списка файлов
+
             return $this->render('gdrive', [
                 'access_token' => $access_token,
+                'files' => $files,
+//                'folder' => $folder,
+//                'uploads_file' => $uploads_file,
             ]);
         }
 
 //        if ($auth_code) {
 //            Yii::info('Request Code: ' . $auth_code, 'test');
-            //Для получения Refresh Token делаем пост запрос на 'https://accounts.google.com/o/oauth2/token'
+        //Для получения Refresh Token делаем пост запрос на 'https://accounts.google.com/o/oauth2/token'
 //
 //            $uri = 'https://accounts.google.com/o/oauth2/token';
 //            $params = [
