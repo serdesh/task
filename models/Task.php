@@ -160,6 +160,10 @@ class Task extends ActiveRecord
 
     }
 
+    /**
+     * Считает кол-во времени, потраченного на завершенные задачи не моих проектов за текущий месяц
+     * @return string
+     */
     public static function getDoneTimePerMonth()
     {
         $all_min = self::find()
@@ -169,12 +173,23 @@ class Task extends ActiveRecord
             ->andWhere(['BETWEEN', 'task.done_date', date('Y-m-01 00:00:00', time()), date('Y-m-d H:i:s', time())])
             ->sum('task.all_time');
 
+        return self::formatMinutes($all_min);
+
+    }
+
+    public static function formatMinutes($all_min){
         $hour = (int)($all_min / 60);
 
         if ($hour < 1) $hour = 0;
 
         $min = $all_min - ($hour * 60);
 
-        return $hour . 'ч. ' . $min . 'мин.';
+        if ($hour == 0){
+            return  $min . ' мин.';
+        } else {
+            return $hour . ' ч. ' . $min . ' мин.';
+        }
+
     }
+
 }

@@ -55,6 +55,9 @@ return [
     [
         'class' => '\kartik\grid\DataColumn',
         'attribute' => 'all_time',
+        'value' => function($data){
+            return Task::formatMinutes($data->all_time);
+        }
     ],
     [
         'class' => '\kartik\grid\DataColumn',
