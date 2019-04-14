@@ -149,6 +149,9 @@ class SiteController extends Controller
         return $this->render('about');
     }
 
+    /**
+     * @return string
+     */
     public function actionGoogleDrive()
     {
 //        $content = Yii::$app->googleDrive->listContents('', true);
@@ -162,6 +165,9 @@ class SiteController extends Controller
         ]);
     }
 
+    /**
+     * @return string
+     */
     public function actionCreateFile()
     {
 
@@ -174,6 +180,9 @@ class SiteController extends Controller
         ]);
     }
 
+    /**
+     * @return string
+     */
     public function actionCreateDir()
     {
         $content = Yii::$app->googleDrive->createDir('Моя2 новая папка');
@@ -182,6 +191,9 @@ class SiteController extends Controller
         ]);
     }
 
+    /**
+     * @return string
+     */
     public function actionDeleteFile()
     {
         $content = Yii::$app->googleDrive->delete('1BeCDyHa4que-oMiY-8QYr4i5SI2-Gg_ubciX8CbvFws');
@@ -190,6 +202,9 @@ class SiteController extends Controller
         ]);
     }
 
+    /**
+     * @return string
+     */
     public function actionDeleteDir()
     {
         $content = Yii::$app->googleDrive->deleteDir('testDir');
@@ -198,6 +213,9 @@ class SiteController extends Controller
         ]);
     }
 
+    /**
+     * @return string
+     */
     public function actionGetSize()
     {
         $content = Yii::$app->googleDrive->getSize('1DVejnXOYtgvP-baMRmJhaEZuVatujvwT');
@@ -206,6 +224,10 @@ class SiteController extends Controller
         ]);
     }
 
+    /**
+     * @return array|string
+     * @throws \yii\base\InvalidConfigException
+     */
     public function actionGetTimestamp()
     {
 
@@ -272,6 +294,10 @@ class SiteController extends Controller
         ]);
     }
 
+    /**
+     * @return string
+     * @throws \Google_Exception
+     */
     public function actionGetToken()
     {
         $request = Yii::$app->request;
