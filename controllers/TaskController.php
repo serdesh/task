@@ -70,6 +70,7 @@ class TaskController extends Controller
                 'status', 'id'
             ],
             'defaultOrder' => [
+                'id' => SORT_DESC,
                 'status' => SORT_ASC
             ]
         ]);
