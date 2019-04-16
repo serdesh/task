@@ -26,7 +26,11 @@ CrudAsset::register($this);
                     'filterModel' => $searchModel,
                     'pjax' => true,
                     'rowOptions' => function ($model) {
-                        if ($model->project->exclude_statistic) return ['class' => 'warning'];
+                        if (isset($model->project->exclude_statistic)){
+                            if ($model->project->exclude_statistic){
+                                return ['class' => 'warning'];
+                            }
+                        }
                         return null;
                     },
                     'columns' => require(__DIR__ . '/_columns.php'),
@@ -105,7 +109,7 @@ $script = <<<JS
         $(document).on('change', '#project-dropdown', function(event){
             var select = $(event.target);
             var selected_value = select.val();
-            var url =  'set-project';
+            var url =  '/task/set-project';
             var id = select.attr('data-id');
             $.post(
                 url,
