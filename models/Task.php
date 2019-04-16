@@ -167,10 +167,10 @@ class Task extends ActiveRecord
     public static function getDoneTimePerMonth()
     {
         $all_min = self::find()
-            ->joinWith(['boss b'])
-            ->andWhere(['<>', 'b.name', 'Desh'])
+            ->joinWith(['project p'])
             ->andWhere(['task.status' => self::TASK_STATUS_DONE])
             ->andWhere(['BETWEEN', 'task.done_date', date('Y-m-01 00:00:00', time()), date('Y-m-d H:i:s', time())])
+            ->andWhere(['p.exclude_statistic' => 0])
             ->sum('task.all_time');
 
         return self::formatMinutes($all_min);

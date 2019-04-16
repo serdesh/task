@@ -1,8 +1,9 @@
 <?php
+
 use yii\helpers\Html;
 use yii\bootstrap\Modal;
 use kartik\grid\GridView;
-use johnitvn\ajaxcrud\CrudAsset; 
+use johnitvn\ajaxcrud\CrudAsset;
 use johnitvn\ajaxcrud\BulkButtonWidget;
 
 /* @var $this yii\web\View */
@@ -19,6 +20,10 @@ CrudAsset::register($this);
     <div id="ajaxCrudDatatable">
         <?php try {
             echo GridView::widget([
+                'rowOptions' => function ($model, $key, $index, $grid) {
+                    if ($model->exclude_statistic) return ['class' => 'warning'];
+                    return null;
+                },
                 'id' => 'crud-datatable',
                 'dataProvider' => $dataProvider,
                 'filterModel' => $searchModel,
@@ -61,11 +66,9 @@ CrudAsset::register($this);
             Yii::error($e->getTraceAsString(), __METHOD__);
         } ?>
     </div>
-    <?= Html::a('<i class="glyphicon glyphicon-plus">FFFFF</i>', ['add-empty-task'],
-        ['role' => 'modal-remote', 'title' => 'Create new Tasks', 'class' => 'btn btn-default'])?>
 </div>
 <?php Modal::begin([
-    "id"=>"ajaxCrudModal",
-    "footer"=>"",// always need it for jquery plugin
-])?>
+    "id" => "ajaxCrudModal",
+    "footer" => "",// always need it for jquery plugin
+]) ?>
 <?php Modal::end(); ?>

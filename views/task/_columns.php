@@ -46,7 +46,7 @@ return [
                     'prompt' => 'Выберите проект',
                 ]);
             }
-            Yii::setAlias('@example', 'http://' . $data->project->name . '/');
+            Yii::setAlias('@example', $data->project->url );
             return Html::a($data->project->name, '@example', ['target' => '_blank']);
         },
         'format' => 'raw',

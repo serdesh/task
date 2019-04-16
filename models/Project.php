@@ -12,10 +12,12 @@ use yii\helpers\ArrayHelper;
  * @property int $id
  * @property string $name
  * @property string $url
+ * @property string $local_url
  * @property string $login
  * @property string $password
  * @property string $created_at
  * @property int $boss_id Владелец проекта
+ * @property int $exclude_statistic Исключать из статистики
  *
  * @property Boss $boss
  * @property Task[] $tasks
@@ -37,8 +39,8 @@ class Project extends ActiveRecord
     {
         return [
             [['url'], 'string'],
-            [['created_at'], 'safe'],
-            [['boss_id'], 'integer'],
+            [['created_at', 'local_url'], 'safe'],
+            [['boss_id', 'exclude_statistic'], 'integer'],
             [['name', 'login', 'password'], 'string', 'max' => 255],
             [['boss_id'], 'exist', 'skipOnError' => true, 'targetClass' => Boss::className(), 'targetAttribute' => ['boss_id' => 'id']],
         ];
@@ -53,10 +55,12 @@ class Project extends ActiveRecord
             'id' => 'ID',
             'name' => 'Имя',
             'url' => 'Url',
+            'local_url' => 'Локальный Url',
             'login' => 'Логин',
             'password' => 'Пароль',
             'created_at' => 'Создан',
             'boss_id' => 'ID босса',
+            'exclude_statistic' => 'Исключать из статистики',
         ];
     }
 

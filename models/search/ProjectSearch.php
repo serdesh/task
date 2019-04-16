@@ -18,7 +18,7 @@ class ProjectSearch extends Project
     {
         return [
             [['id', 'boss_id'], 'integer'],
-            [['name', 'url', 'login', 'password', 'created_at'], 'safe'],
+            [['name', 'url', 'login', 'password', 'created_at', 'local_url'], 'safe'],
         ];
     }
 
@@ -63,7 +63,8 @@ class ProjectSearch extends Project
         $query->andFilterWhere(['like', 'name', $this->name])
             ->andFilterWhere(['like', 'url', $this->url])
             ->andFilterWhere(['like', 'login', $this->login])
-            ->andFilterWhere(['like', 'password', $this->password]);
+            ->andFilterWhere(['like', 'password', $this->password])
+            ->andFilterWhere(['like', 'local_url', $this->local_url]);
 
         return $dataProvider;
     }

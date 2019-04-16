@@ -101,14 +101,17 @@ class ProjectController extends Controller
         
                 ];         
             }else if($model->load($request->post()) && $model->save()){
-                return [
-                    'forceReload'=>'#crud-datatable-pjax',
-                    'title'=> "Create new Project",
-                    'content'=>'<span class="text-success">Create Project success</span>',
-                    'footer'=> Html::button('Close',['class'=>'btn btn-default pull-left','data-dismiss'=>"modal"]).
-                            Html::a('Create More',['create'],['class'=>'btn btn-primary','role'=>'modal-remote'])
-        
-                ];         
+
+                return $this->redirect('/project/index');
+
+//                return [
+//                    'forceReload'=>'#crud-datatable-pjax',
+//                    'title'=> "Create new Project",
+//                    'content'=>'<span class="text-success">Create Project success</span>',
+//                    'footer'=> Html::button('Close',['class'=>'btn btn-default pull-left','data-dismiss'=>"modal"]).
+//                            Html::a('Create More',['create'],['class'=>'btn btn-primary','role'=>'modal-remote'])
+//
+//                ];
             }else{           
                 return [
                     'title'=> "Create new Project",
@@ -163,15 +166,17 @@ class ProjectController extends Controller
                                 Html::button('Save',['class'=>'btn btn-primary','type'=>"submit"])
                 ];         
             }else if($model->load($request->post()) && $model->save()){
-                return [
-                    'forceReload'=>'#crud-datatable-pjax',
-                    'title'=> "Project #".$id,
-                    'content'=>$this->renderAjax('view', [
-                        'model' => $model,
-                    ]),
-                    'footer'=> Html::button('Close',['class'=>'btn btn-default pull-left','data-dismiss'=>"modal"]).
-                            Html::a('Edit',['update','id'=>$id],['class'=>'btn btn-primary','role'=>'modal-remote'])
-                ];    
+                return $this->redirect('/project/index');
+//
+//                return [
+//                    'forceReload'=>'#crud-datatable-pjax',
+//                    'title'=> "Project #".$id,
+//                    'content'=>$this->renderAjax('view', [
+//                        'model' => $model,
+//                    ]),
+//                    'footer'=> Html::button('Close',['class'=>'btn btn-default pull-left','data-dismiss'=>"modal"]).
+//                            Html::a('Edit',['update','id'=>$id],['class'=>'btn btn-primary','role'=>'modal-remote'])
+//                ];
             }else{
                  return [
                     'title'=> "Update Project #".$id,
