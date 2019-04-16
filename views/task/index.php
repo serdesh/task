@@ -25,6 +25,10 @@ CrudAsset::register($this);
                     'dataProvider' => $dataProvider,
                     'filterModel' => $searchModel,
                     'pjax' => true,
+                    'rowOptions' => function ($model) {
+                        if ($model->project->exclude_statistic) return ['class' => 'warning'];
+                        return null;
+                    },
                     'columns' => require(__DIR__ . '/_columns.php'),
                     'toolbar' => [
                         ['content' =>
@@ -42,7 +46,7 @@ CrudAsset::register($this);
                     'panel' => [
                         'type' => 'primary',
                         'heading' => '<i class="glyphicon glyphicon-list"></i> Список задач',
-                    'before' => '<em>Время завершенных проектов за текущий месяц: ' . Task::getDoneTimePerMonth() . '</em>',
+                        'before' => '<em>Время завершенных проектов за текущий месяц: ' . Task::getDoneTimePerMonth() . '</em>',
                         'after' => BulkButtonWidget::widget([
                                 'buttons' => Html::a('<i class="glyphicon glyphicon-trash"></i>&nbsp; Удалить выделенное',
                                     ["bulkdelete"],
