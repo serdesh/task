@@ -318,7 +318,7 @@ class TaskController extends Controller
 
     /**
      * Add Task
-     * @return Response
+     * @return array
      */
     public function actionAddEmptyTask()
     {
@@ -328,7 +328,9 @@ class TaskController extends Controller
             Yii::error($model->errors, __METHOD__);
             Yii::$app->session->setFlash('error', 'Ошибка добавления');
         }
-        return $this->redirect(['index']);
+        Yii::$app->response->format = Response::FORMAT_JSON;
+        return ['forceClose'=>true,'forceReload'=>'#crud-datatable-pjax'];
+//        return $this->redirect(['index']);
     }
 
     /**

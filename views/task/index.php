@@ -16,6 +16,8 @@ $this->params['breadcrumbs'][] = $this->title;
 
 CrudAsset::register($this);
 
+$dataProvider->pagination->pageSize = 40;
+
 ?>
     <div class="task-index">
         <div id="ajaxCrudDatatable">
@@ -50,7 +52,7 @@ CrudAsset::register($this);
                     'panel' => [
                         'type' => 'primary',
                         'heading' => '<i class="glyphicon glyphicon-list"></i> Список задач',
-                        'before' => '<em>Время завершенных проектов за текущий месяц: ' . Task::getDoneTimePerMonth() . '</em>',
+                        'before' => '<em>Время завершенных задач за текущий месяц: ' . Task::getDoneTimePerMonth() . '</em>',
                         'after' => BulkButtonWidget::widget([
                                 'buttons' => Html::a('<i class="glyphicon glyphicon-trash"></i>&nbsp; Удалить выделенное',
                                     ["bulkdelete"],

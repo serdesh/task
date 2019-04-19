@@ -20,6 +20,7 @@ return [
         'attribute' => 'id',
         'label' => '#',
         'filter' => false,
+        'vAlign' => 'middle',
     ],
     [
         'class' => '\kartik\grid\EditableColumn',
@@ -27,12 +28,13 @@ return [
         'editableOptions' => [
             'asPopover' => false,
             'inputType' => Editable::INPUT_TEXTAREA,
-            'size'=>'lg',
+            'size' => 'lg',
             'options' => [
-                'class'=>'form-control',
-                'rows'=>5,
-                'placeholder'=>'Введите задачу...']
+                'class' => 'form-control',
+                'rows' => 5,
+                'placeholder' => 'Введите задачу...']
         ],
+        'vAlign' => 'middle',
     ],
     [
         'class' => '\kartik\grid\DataColumn',
@@ -46,18 +48,19 @@ return [
                     'prompt' => 'Выберите проект',
                 ]);
             }
-            Yii::setAlias('@example', $data->project->url );
+            Yii::setAlias('@example', $data->project->url);
             return Html::a($data->project->name, '@example', ['target' => '_blank']);
         },
         'format' => 'raw',
-
+        'vAlign' => 'middle',
     ],
     [
         'class' => '\kartik\grid\DataColumn',
         'attribute' => 'all_time',
-        'value' => function($data){
+        'value' => function ($data) {
             return Task::formatMinutes($data->all_time);
-        }
+        },
+        'vAlign' => 'middle',
     ],
     [
         'class' => '\kartik\grid\DataColumn',
@@ -73,6 +76,7 @@ return [
             return Task::getStatusName($data->status);
         },
         'format' => 'raw',
+        'vAlign' => 'middle',
     ],
     [
         'class' => '\kartik\grid\DataColumn',
@@ -92,7 +96,7 @@ return [
             return '';
         },
         'format' => 'raw',
-
+        'vAlign' => 'middle',
     ],
 //    [
 //        'class'=>'\kartik\grid\DataColumn',
