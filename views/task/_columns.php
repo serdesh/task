@@ -39,6 +39,7 @@ return [
     [
         'class' => '\kartik\grid\DataColumn',
         'attribute' => 'project_id',
+        'filter' => Project::getProjectList(),
         'value' => function ($data) {
             if (!$data->project_id) {
                 return Html::activeDropDownList($data, 'project_id', Project::getProjectList(), [

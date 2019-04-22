@@ -67,9 +67,10 @@ class TaskController extends Controller
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
         $dataProvider->setSort([
             'attributes' => [
-                'status', 'id'
+                'start', 'status', 'id'
             ],
             'defaultOrder' => [
+                'start' => SORT_DESC,
                 'status' => SORT_ASC,
                 'id' => SORT_DESC,
             ]
@@ -80,7 +81,6 @@ class TaskController extends Controller
             'dataProvider' => $dataProvider,
         ]);
     }
-
 
     /**
      * Displays a single Task model.
