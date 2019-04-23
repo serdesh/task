@@ -78,6 +78,7 @@ return [
         },
         'format' => 'raw',
         'vAlign' => 'middle',
+        'width' => '110px',
     ],
     [
         'class' => '\kartik\grid\DataColumn',
@@ -99,10 +100,17 @@ return [
         'format' => 'raw',
         'vAlign' => 'middle',
     ],
-//    [
-//        'class'=>'\kartik\grid\DataColumn',
-//        'attribute'=>'notes',
-//    ],
+    [
+        'class'=>'\kartik\grid\DataColumn',
+        'attribute'=>'notes',
+        'value' => function($data){
+            if ($data->status == Task::TASK_STATUS_IN_WORK){
+                return $data->notes;
+            }
+            //Если задача завершена, комментарий не выводим
+            return '';
+        }
+    ],
     [
         'class' => 'kartik\grid\ActionColumn',
         'dropdown' => false,
