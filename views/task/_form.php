@@ -20,18 +20,23 @@ use yii\widgets\ActiveForm;
 
     <?= $form->field($model, 'description')->textarea(['rows' => 3]) ?>
 
-    <?php if (!$model->isNewRecord): ?>
-        <?= $form->field($model, 'all_time')->textInput(['maxlength' => true]) ?>
+    <div class="row">
+        <div class="col-md-6">
+            <?= $form->field($model, 'all_time')->textInput(['maxlength' => true]) ?>
+        </div>
+        <div class="col-md-6">
+            <?= $form->field($model, 'status')->dropDownList(Task::getStatusList()) ?>
+        </div>
+    </div>
 
-        <?= $form->field($model, 'status')->dropDownList(Task::getStatusList()) ?>
-    <?php endif; ?>
 
     <?= $form->field($model, 'notes')->textarea(['rows' => 3]) ?>
 
 
     <?php if (!Yii::$app->request->isAjax) { ?>
         <div class="form-group">
-            <?= Html::submitButton($model->isNewRecord ? 'Create' : 'Update', ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
+            <?= Html::submitButton($model->isNewRecord ? 'Create' : 'Update',
+                ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
         </div>
     <?php } ?>
 

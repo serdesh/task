@@ -6,6 +6,8 @@ use kartik\editable\Editable;
 use yii\bootstrap\Html;
 use yii\helpers\Url;
 
+/* @var $data app\models\Task */
+
 return [
     [
         'class' => 'kartik\grid\CheckboxColumn',
@@ -32,7 +34,8 @@ return [
             'options' => [
                 'class' => 'form-control',
                 'rows' => 5,
-                'placeholder' => 'Введите задачу...']
+                'placeholder' => 'Введите задачу...',
+            ]
         ],
         'vAlign' => 'middle',
     ],
@@ -101,15 +104,16 @@ return [
         'vAlign' => 'middle',
     ],
     [
-        'class'=>'\kartik\grid\DataColumn',
-        'attribute'=>'notes',
-        'value' => function($data){
-            if ($data->status == Task::TASK_STATUS_IN_WORK){
+        'class' => '\kartik\grid\DataColumn',
+        'attribute' => 'notes',
+        'value' => function ($data) {
+            if ($data->status == Task::TASK_STATUS_IN_WORK) {
                 return $data->notes;
             }
             //Если задача завершена, комментарий не выводим
             return '';
-        }
+        },
+        'format' => 'nText',
     ],
     [
         'class' => 'kartik\grid\ActionColumn',

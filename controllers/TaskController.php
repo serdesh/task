@@ -191,12 +191,12 @@ class TaskController extends Controller
             Yii::$app->response->format = Response::FORMAT_JSON;
             if ($request->isGet) {
                 return [
-                    'title' => "Update Task #" . $id,
+                    'title' => "Редактирование задачи #" . $id,
                     'content' => $this->renderAjax('update', [
                         'model' => $model,
                     ]),
-                    'footer' => Html::button('Close', ['class' => 'btn btn-default pull-left', 'data-dismiss' => "modal"]) .
-                        Html::button('Save', ['class' => 'btn btn-primary', 'type' => "submit"])
+                    'footer' => Html::button('Закрыть', ['class' => 'btn btn-default pull-left', 'data-dismiss' => "modal"]) .
+                        Html::button('Сохранить', ['class' => 'btn btn-primary', 'type' => "submit"])
                 ];
             } else if ($model->load($request->post()) && $model->save()) {
                     return $this->redirect('/task/index');
@@ -212,12 +212,12 @@ class TaskController extends Controller
 //                ];
             } else {
                 return [
-                    'title' => "Update Task #" . $id,
+                    'title' => "Редактирование задачи #" . $id,
                     'content' => $this->renderAjax('update', [
                         'model' => $model,
                     ]),
-                    'footer' => Html::button('Close', ['class' => 'btn btn-default pull-left', 'data-dismiss' => "modal"]) .
-                        Html::button('Save', ['class' => 'btn btn-primary', 'type' => "submit"])
+                    'footer' => Html::button('Закрыть', ['class' => 'btn btn-default pull-left', 'data-dismiss' => "modal"]) .
+                        Html::button('Сохранить', ['class' => 'btn btn-primary', 'type' => "submit"])
                 ];
             }
         } else {
@@ -346,10 +346,7 @@ class TaskController extends Controller
             //Если есть начало периода - к общему времени добавляем прошедшее время между началом и текущим моментом
             $date_diff = Task::dateDifference(date('Y-m-d H:i', time()), $model->start); //Разница в минутах
 
-//            $test_date_diff = Task::dateDifference(date('Y-m-d H:i', time()), date('Y-m-09 H:i:s', time()));
-
             Yii::info('Date-diff(min): ' . $date_diff, 'test');
-//            Yii::info('Test Date-diff(min): ' . $test_date_diff, 'test');
 
             $all_time = $model->all_time;
 
@@ -360,17 +357,16 @@ class TaskController extends Controller
                 $model->all_time = $all_time;
 
                 Yii::info('All time(min): ' . $date_diff, 'test');
+            }
 
-
-                if (!$model->save()) {
+            if (!$model->save()) {
+                Yii::error($model->errors, __METHOD__);
+                Yii::$app->session->setFlash('error', 'Ошибка сохранения общего времени');
+            } else {
+                $model->start = null;
+                if (!$model->save()){
                     Yii::error($model->errors, __METHOD__);
-                    Yii::$app->session->setFlash('error', 'Ошибка сохранения общего времени');
-                } else {
-                    $model->start = null;
-                    if (!$model->save()){
-                        Yii::error($model->errors, __METHOD__);
-                        Yii::$app->session->setFlash('error', 'Ошибка обнуления старт/стоп');
-                    }
+                    Yii::$app->session->setFlash('error', 'Ошибка обнуления старт/стоп');
                 }
             }
         } else {
