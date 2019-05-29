@@ -3,10 +3,10 @@
 namespace app\controllers;
 
 use app\models\Auth;
+use app\models\UploadForm;
 use Google_Client;
 use Google_Service_Drive;
-use Google_Service_Drive_DriveFile;
-use GuzzleHttp\Client;
+use yii\httpclient\Client;
 use Yii;
 use yii\bootstrap\Html;
 use yii\filters\AccessControl;
@@ -235,7 +235,8 @@ class SiteController extends Controller
             Yii::$app->response->format = Response::FORMAT_JSON;
             return [
                 'title' => "Дата папки " . Yii::$app->googleDrive->getName('1DVejnXOYtgvP-baMRmJhaEZuVatujvwT'),
-                'content' => date('d.m.Y H:i', Yii::$app->googleDrive->getTimestamp('1DVejnXOYtgvP-baMRmJhaEZuVatujvwT')),
+                'content' => date('d.m.Y H:i',
+                    Yii::$app->googleDrive->getTimestamp('1DVejnXOYtgvP-baMRmJhaEZuVatujvwT')),
             ];
         }
         $content = Yii::$app->googleDrive->getTimestamp('1DVejnXOYtgvP-baMRmJhaEZuVatujvwT');
@@ -352,7 +353,8 @@ class SiteController extends Controller
                 $this->redirect('https://accounts.google.com/o/oauth2/auth?' . $get_data);
 
                 $guzzle_client = new Client();
-                $response = $guzzle_client->request('GET', 'https://accounts.google.com/o/oauth2/auth?', $data)->getBody();
+                $response = $guzzle_client->request('GET', 'https://accounts.google.com/o/oauth2/auth?',
+                    $data)->getBody();
 
                 Yii::info($response, 'test');
 
@@ -471,7 +473,79 @@ class SiteController extends Controller
                 'footer' => Html::button('Close', ['class' => 'btn btn-default pull-left', 'data-dismiss' => "modal"])
             ];
         }
-        Yii::$app->session->setFlash('success', 'Резервное копирование выполнено успешно! Создан файл: ' . $file . PHP_EOL);
+        Yii::$app->session->setFlash('success',
+            'Резервное копирование выполнено успешно! Создан файл: ' . $file . PHP_EOL);
         return $this->goHome();
+    }
+
+    public function actionYandex()
+    {
+        $htmlContent = $this->renderPartial('_mpdf_form');
+        return $this->render('yandex',
+            [
+                'htmlContent' => $htmlContent
+            ]);
+    }
+
+    public function actionMpdf()
+    {
+        return $this->render('mpdf');
+    }
+
+    /**
+     * @return mixed
+     * @throws \yii\base\InvalidConfigException
+     */
+    public function actionGetMap()
+    {
+
+        header("Content-type:image/png");
+
+        $client = new Client([
+            'transport' => 'yii\httpclient\CurlTransport',
+        ]);
+
+        $dir = Url::to('@webroot/uploads');
+        $file = 'file_' . rand(99999, 9999999999) . '.png';
+        $path_file = $dir . '/'. $file;
+
+
+//        Yii::info($dir, 'test');
+//        Yii::info(is_dir($dir), 'test');
+
+        if (!is_dir($dir)){
+            mkdir($dir, 777);
+        }
+
+        $fh = fopen($path_file, 'w');
+        $response = $client->createRequest()
+            ->setMethod('GET')
+            ->setUrl('https://static-maps.yandex.ru/1.x/?')
+            ->setData([
+                'll' => '37.620070,55.753630',
+                'size' => '450,450',
+                'z' => '13',
+                'l' => 'map',
+                'pt' => '37.620070,55.753630,pmwtm1~37.64,55.76363,pmwtm99',
+            ])
+            ->setOutputFile($fh)
+            ->send();
+
+//       Yii::$app->response->sendContentAsFile($response->content, 'fileMap.png');
+
+        return $this->render('yandex', [
+            'map_image' => '/uploads/'. $file,
+        ]);
+
+//        \yii\helpers\VarDumper::dump($response->headers, 10, true);
+    }
+
+    public function actionSendFile()
+    {
+        $request = Yii::$app->request;
+
+        return $this->render('send_file', [
+            'model' => new UploadForm(),
+        ]);
     }
 }

@@ -43,12 +43,48 @@
                                 ['label' => 'Месенджеры', 'icon' => 'user-o', 'url' => ['/messenger']],
                             ]
                         ],
-                        ['label' => 'GoogleDrive', 'icon' => 'user-o', 'url' => ['/site/google-drive']],
-                        ['label' => 'Drive модуль', 'icon' => 'user-o', 'url' => ['/drive']],
-                        ['label' => 'BackUp', 'icon' => 'user-o', 'url' => ['/site/backup']],
+                        [
+                            'label' => 'Google',
+                            'icon' => 'user-o',
+                            'url' => '#',
+                            'items' => [
+                                ['label' => 'GoogleDrive', 'icon' => 'user-o', 'url' => ['/site/google-drive']],
+                                ['label' => 'Drive модуль', 'icon' => 'user-o', 'url' => ['/drive']],
+                            ],
+                        ],
+                        [
+                            'label' => 'Yandex',
+                            'icon' => 'user-o',
+                            'url' => '#',
+                            'items' => [
+                                ['label' => 'Static API ', 'icon' => 'user-o', 'url' => ['/site/yandex']],
+                            ],
+                        ],
+                        [
+                            'label' => 'Kartik',
+                            'icon' => 'user-o',
+                            'url' => '#',
+                            'items' => [
+                                ['label' => 'mPDF', 'icon' => 'user-o', 'url' => ['/site/mpdf']],
+                            ],
+                        ],
+                        [
+                            'label' => 'Примеры',
+                            'icon' => 'user-o',
+                            'url' => '#',
+                            'items' => [
+                                ['label' => 'BackUp', 'icon' => 'user-o', 'url' => ['/site/backup']],
+                                ['label' => 'Отправка файла', 'icon' => 'user-o', 'url' => ['/site/send-file']],
+                            ],
+                        ],
                         ['label' => 'Gii', 'icon' => 'user-o', 'url' => ['/gii']],
                         ['label' => 'Debug', 'icon' => 'bug', 'url' => ['/debug']],
-                        ['label' => 'Login', 'url' => ['site/login'], 'visible' => Yii::$app->user->isGuest, 'icon' => 'id-card'],
+                        [
+                            'label' => 'Login',
+                            'url' => ['site/login'],
+                            'visible' => Yii::$app->user->isGuest,
+                            'icon' => 'id-card'
+                        ],
                         [
                             'label' => 'Some tools',
                             'icon' => 'share',

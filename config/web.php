@@ -1,5 +1,7 @@
 <?php
 
+use kartik\mpdf\Pdf;
+
 $params = require __DIR__ . '/params.php';
 $db = require __DIR__ . '/db.php';
 
@@ -22,6 +24,14 @@ $config = [
         '@npm' => '@vendor/npm-asset',
     ],
     'components' => [
+        // setup Krajee Pdf component
+        'pdf' => [
+            'class' => Pdf::class,
+            'format' => Pdf::FORMAT_A4,
+            'orientation' => Pdf::ORIENT_PORTRAIT,
+            'destination' => Pdf::DEST_BROWSER,
+            // refer settings section for all configuration options
+        ],
         'authClientCollection' => [
             'class' => 'yii\authclient\Collection',
             'clients' => [
