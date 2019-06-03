@@ -76,6 +76,7 @@
                             'items' => [
                                 ['label' => 'BackUp', 'icon' => 'user-o', 'url' => ['/site/backup']],
                                 ['label' => 'Отправка файла', 'icon' => 'user-o', 'url' => ['/site/send-file']],
+                                ['label' => 'Почта', 'icon' => 'user-o', 'url' => ['/site/contact']],
                             ],
                         ],
                         ['label' => 'Gii', 'icon' => 'user-o', 'url' => ['/gii']],
