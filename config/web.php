@@ -18,6 +18,9 @@ $config = [
         'drive' => [
             'class' => 'app\modules\drive\Module',
         ],
+        'disk' => [
+            'class' => 'app\modules\disk\Yandex',
+        ],
     ],
     'aliases' => [
         '@bower' => '@vendor/bower-asset',

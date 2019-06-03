@@ -9,4 +9,6 @@ class UploadForm extends Model
     public $file;
     public $token;
     public $type;
+    public $date;
+    public $route;
 }

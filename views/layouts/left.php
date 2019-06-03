@@ -58,6 +58,7 @@
                             'url' => '#',
                             'items' => [
                                 ['label' => 'Static API ', 'icon' => 'user-o', 'url' => ['/site/yandex']],
+                                ['label' => 'Диск API ', 'icon' => 'disk', 'url' => ['/site/yandex-disk']],
                             ],
                         ],
                         [

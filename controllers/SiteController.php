@@ -542,10 +542,48 @@ class SiteController extends Controller
 
     public function actionSendFile()
     {
-        $request = Yii::$app->request;
-
         return $this->render('send_file', [
             'model' => new UploadForm(),
         ]);
+    }
+
+    public function actionYandexDisk($access_token = null, $oauth = null)
+    {
+        $request = Yii::$app->request;
+
+        if ($access_token){
+            return $this->render('yandex_disk',[
+                'access_token' => $access_token,
+            ]);
+        }
+
+
+        if ($request->isAjax){
+
+            Yii::info('is Ajax', 'test');
+
+            Yii::$app->response->format = Response::FORMAT_JSON;
+
+            return [
+                'title' => "Доступ к Я Диску",
+                'content' => $this->renderAjax('_oauth_form'),
+            ];
+
+        }
+
+        if ($oauth){
+            return $this->render('_oauth_form');
+
+        }
+        return $this->render('yandex_disk');
+    }
+
+    public function actionSaveToken($token)
+    {
+        $file = fopen(Url::to('@app/token.txt'),'a');
+        $text = $token."\r\n";
+        fwrite($file,$text);
+        fclose($file);
+        return $this->render('yandex_disk');
     }
 }
