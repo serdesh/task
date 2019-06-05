@@ -4,7 +4,7 @@ use yii\widgets\ActiveForm;
 $url = 'http://promoyt/api/v1/upload-video';
 //$url = 'http://promoyt.teo-crm.ru/api/v1/upload-file';
 ?>
-
+<?php if (!$url): //Условие добавлено для отключения стандартной формы?>
 <?php $form = ActiveForm::begin([
     'action' => $url,
     'options' => ['enctype' => 'multipart/form-data']
@@ -38,3 +38,25 @@ $url = 'http://promoyt/api/v1/upload-video';
     </div>
 </div>
 <?php ActiveForm::end(); ?>
+<? endif; ?>
+
+<div class="row">
+    <div class="col-md-12">
+        <h2>На гольном php</h2>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-12">
+        <!-- Тип кодирования данных, enctype, ДОЛЖЕН БЫТЬ указан ИМЕННО так -->
+        <form enctype="multipart/form-data" action="http://promoyt/api/v1/upload-video" method="POST">
+            <!-- Поле MAX_FILE_SIZE должно быть указано до поля загрузки файла -->
+            <input type="hidden" name="MAX_FILE_SIZE" value="30000" />
+            <!-- Название элемента input определяет имя в массиве $_FILES -->
+            Отправить этот файл: <input name="file" type="file" />
+            <input type="text" name="token" value="123">
+            <input type="text" name="date" value="2019-06-04 11:00:00">
+            <input type="text" name="route" value="27">
+            <input type="submit" value="Отправить файл" />
+        </form>
+    </div>
+</div>
