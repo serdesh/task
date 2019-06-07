@@ -40,43 +40,44 @@
                             'items' => [
                                 ['label' => 'Проекты', 'icon' => 'file-code', 'url' => ['/project']],
                                 ['label' => 'Заказчики', 'icon' => 'user-o', 'url' => ['/boss']],
-                                ['label' => 'Месенджеры', 'icon' => 'user-o', 'url' => ['/messenger']],
+                                ['label' => 'Месенджеры', 'icon' => 'envelope', 'url' => ['/messenger']],
                             ]
                         ],
                         [
                             'label' => 'Google',
-                            'icon' => 'user-o',
+                            'icon' => 'google',
                             'url' => '#',
                             'items' => [
-                                ['label' => 'GoogleDrive', 'icon' => 'user-o', 'url' => ['/site/google-drive']],
-                                ['label' => 'Drive модуль', 'icon' => 'user-o', 'url' => ['/drive']],
+                                ['label' => 'GoogleDrive', 'icon' => 'hdd', 'url' => ['/site/google-drive']],
+                                ['label' => 'Drive модуль', 'icon' => 'hdd', 'url' => ['/drive']],
                             ],
                         ],
                         [
                             'label' => 'Yandex',
-                            'icon' => 'user-o',
+                            'icon' => 'yahoo',
                             'url' => '#',
                             'items' => [
-                                ['label' => 'Static API ', 'icon' => 'user-o', 'url' => ['/site/yandex']],
-                                ['label' => 'Диск API ', 'icon' => 'disk', 'url' => ['/site/yandex-disk']],
+                                ['label' => 'Static API ', 'icon' => 'map', 'url' => ['/site/yandex']],
+                                ['label' => 'Диск API ', 'icon' => 'hdd', 'url' => ['/site/yandex-disk']],
                             ],
                         ],
                         [
                             'label' => 'Kartik',
-                            'icon' => 'user-o',
+                            'icon' => 'circle',
                             'url' => '#',
                             'items' => [
-                                ['label' => 'mPDF', 'icon' => 'user-o', 'url' => ['/site/mpdf']],
+                                ['label' => 'mPDF', 'icon' => 'file-pdf', 'url' => ['/site/mpdf']],
                             ],
                         ],
                         [
                             'label' => 'Примеры',
-                            'icon' => 'user-o',
+                            'icon' => 'circle',
                             'url' => '#',
                             'items' => [
-                                ['label' => 'BackUp', 'icon' => 'user-o', 'url' => ['/site/backup']],
-                                ['label' => 'Отправка файла', 'icon' => 'user-o', 'url' => ['/site/send-file']],
-                                ['label' => 'Почта', 'icon' => 'user-o', 'url' => ['/site/contact']],
+                                ['label' => 'BackUp', 'icon' => 'download', 'url' => ['/site/backup']],
+                                ['label' => 'Отправка файла', 'icon' => 'share', 'url' => ['/site/send-file']],
+                                ['label' => 'Отправка почты', 'icon' => 'envelope', 'url' => ['/site/contact']],
+                                ['label' => 'Прием почты', 'icon' => 'envelope', 'url' => ['/site/mail']],
                             ],
                         ],
                         ['label' => 'Gii', 'icon' => 'user-o', 'url' => ['/gii']],

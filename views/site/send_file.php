@@ -50,7 +50,7 @@ $url = 'http://promoyt/api/v1/upload-video';
         <!-- Тип кодирования данных, enctype, ДОЛЖЕН БЫТЬ указан ИМЕННО так -->
         <form enctype="multipart/form-data" action="http://promoyt/api/v1/upload-video" method="POST">
             <!-- Поле MAX_FILE_SIZE должно быть указано до поля загрузки файла -->
-            <input type="hidden" name="MAX_FILE_SIZE" value="30000" />
+            <input type="hidden" name="MAX_FILE_SIZE" value="3000000000" />
             <!-- Название элемента input определяет имя в массиве $_FILES -->
             Отправить этот файл: <input name="file" type="file" />
             <input type="text" name="token" value="123">

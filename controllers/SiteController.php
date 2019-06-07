@@ -586,4 +586,9 @@ class SiteController extends Controller
         fclose($file);
         return $this->render('yandex_disk');
     }
+
+    public function actionMail()
+    {
+        return $this->render('mail');
+    }
 }
