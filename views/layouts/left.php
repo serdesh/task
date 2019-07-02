@@ -74,6 +74,7 @@
                             'icon' => 'circle',
                             'url' => '#',
                             'items' => [
+                                ['label' => 'Тестовая страница', 'icon' => 'file', 'url' => ['/site/test-page']],
                                 ['label' => 'BackUp', 'icon' => 'download', 'url' => ['/site/backup']],
                                 ['label' => 'Отправка файла', 'icon' => 'share', 'url' => ['/site/send-file']],
                                 ['label' => 'Отправка почты', 'icon' => 'envelope', 'url' => ['/site/contact']],

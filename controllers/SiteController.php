@@ -591,4 +591,9 @@ class SiteController extends Controller
     {
         return $this->render('mail');
     }
+
+    public function actionTestPage()
+    {
+        return $this->render('test_page');
+    }
 }

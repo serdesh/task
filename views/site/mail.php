@@ -25,6 +25,7 @@ $this->title = 'Получение почты'
         /** @noinspection PhpUnhandledExceptionInspection */
         throw new Exception($e->getMessage());
     }
+    $mailbox->setAttachmentsIgnore(true); //Игнорируем вложения для сообщений
     $mailbox->getImapStream();
     $mail_ids = [];
 //    $mail_ids = $mailbox->searchMailbox('ALL'); //Все сообщения
@@ -41,9 +42,14 @@ $this->title = 'Получение почты'
     //    $mail_ids = $mailbox->searchMailBox('SUBJECT "Выпущены обновления для вашего телефона"');
 //    VarDumper::dump($mail_ids, 10, true);
 
-    $mail_check = (array)$mailbox->checkMailbox();
+//    $mail_check = (array)$mailbox->checkMailbox();
+    $mail_check = (array)$mailbox->imap('mailboxmsginfo');
+
     echo 'Новых сообщений: ';
     VarDumper::dump($mail_check['Recent'], 10, true);
+    echo '<br>';
+    echo 'Не прочитанных сообщений: ';
+    VarDumper::dump($mail_check['Unread'], 10, true);
     echo '<br>';
 
     $mail_ids = [163];
@@ -52,9 +58,10 @@ $this->title = 'Получение почты'
         $mail = $mailbox->getMail($mail_id);
         //Получаем файлы вложенные к данному сообщению если он есть.
         $attachments = $mail->getAttachments();
-
+        echo 'Дата сообщения: ';
         VarDumper::dump($mail->date, 10, true);
         echo '<br>';
+        echo 'Получатели сообщения: ';
         VarDumper::dump($mail->to, 10, true);
         echo '<br>';
         echo 'Есть вложения: ';
@@ -70,11 +77,15 @@ $this->title = 'Получение почты'
         echo '<br> От: ';
         VarDumper::dump($mail->fromAddress, 10, true);
         echo '<br>Тело сообщения: ';
-//Выводим сообщения.
+        //Выводим сообщения.
         echo $mail->textHtml;
         echo '<br>=====================================================================<br>';
+        $head = $mailbox->getMailHeader($mail_id);
+
+        VarDumper::dump($head->subject, 10, true);
     }
-    VarDumper::dump($mail_ids, 10, true);
+
+
 
     //    $id = 3;
     //    #Сохраняем сообщения по его ид:

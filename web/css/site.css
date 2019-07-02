@@ -117,3 +117,19 @@ a.desc:after {
 .kv-editable, .kv-editable-parent, .kv-editable-input {
     width: 100% !important;
 }
+
+/*ТЕстовая страница*/
+.call-alert{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.other-elements-alert{
+    display: flex;
+    align-items: flex-start;
+}
+
+#resident-btn{
+    margin-right: 1rem;
+}
