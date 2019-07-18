@@ -2,13 +2,53 @@
 
 namespace app\models;
 
+use Yii;
 use yii\base\Model;
+use yii\web\UploadedFile;
 
 class UploadForm extends Model
 {
     public $file;
+    public $files;
     public $token;
     public $type;
     public $date;
     public $route;
+
+    public function rules()
+    {
+        return [
+            [
+                ['file'],
+                'file',
+                'skipOnEmpty' => true,
+                'extensions' => 'txt, ods, png, jpg, gif, sql, pdf, xls, xlsx, doc, docx, json'
+            ],
+            [
+                ['files'],
+                'file',
+                'skipOnEmpty' => true,
+                'maxFiles' => 5,
+                'extensions' => 'txt, ods, png, jpg, gif, sql, pdf, xls, xlsx, doc, docx, json'
+            ],
+        ];
+    }
+
+    function upload()
+    {
+        Yii::info('Upload form start', 'test');
+
+        if ($this->validate()){
+            if (!is_dir('/uploads')) {
+                mkdir('/uploads', 0777);
+            }
+            /** @var UploadedFile $file */
+            foreach ($this->files as $file){
+                $file->saveAs('uploads/' . $file->baseName . '.' . $file->extension);
+            }
+            return true;
+        }
+        return false;
+    }
+
 }

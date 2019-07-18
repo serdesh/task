@@ -18,6 +18,7 @@ use yii\filters\VerbFilter;
 use app\models\LoginForm;
 use app\models\ContactForm;
 use app\components\AuthHandler;
+use yii\web\UploadedFile;
 
 class SiteController extends Controller
 {
@@ -507,18 +508,18 @@ class SiteController extends Controller
 
         $dir = Url::to('@webroot/uploads');
         $file = 'file_' . rand(99999, 9999999999) . '.png';
-        $path_file = $dir . '/'. $file;
+        $path_file = $dir . '/' . $file;
 
 
 //        Yii::info($dir, 'test');
 //        Yii::info(is_dir($dir), 'test');
 
-        if (!is_dir($dir)){
+        if (!is_dir($dir)) {
             mkdir($dir, 777);
         }
 
         $fh = fopen($path_file, 'w');
-        $response = $client->createRequest()
+        $client->createRequest()
             ->setMethod('GET')
             ->setUrl('https://static-maps.yandex.ru/1.x/?')
             ->setData([
@@ -534,7 +535,7 @@ class SiteController extends Controller
 //       Yii::$app->response->sendContentAsFile($response->content, 'fileMap.png');
 
         return $this->render('yandex', [
-            'map_image' => '/uploads/'. $file,
+            'map_image' => '/uploads/' . $file,
         ]);
 
 //        \yii\helpers\VarDumper::dump($response->headers, 10, true);
@@ -551,14 +552,14 @@ class SiteController extends Controller
     {
         $request = Yii::$app->request;
 
-        if ($access_token){
-            return $this->render('yandex_disk',[
+        if ($access_token) {
+            return $this->render('yandex_disk', [
                 'access_token' => $access_token,
             ]);
         }
 
 
-        if ($request->isAjax){
+        if ($request->isAjax) {
 
             Yii::info('is Ajax', 'test');
 
@@ -571,7 +572,7 @@ class SiteController extends Controller
 
         }
 
-        if ($oauth){
+        if ($oauth) {
             return $this->render('_oauth_form');
 
         }
@@ -580,9 +581,9 @@ class SiteController extends Controller
 
     public function actionSaveToken($token)
     {
-        $file = fopen(Url::to('@app/token.txt'),'a');
-        $text = $token."\r\n";
-        fwrite($file,$text);
+        $file = fopen(Url::to('@app/token.txt'), 'a');
+        $text = $token . "\r\n";
+        fwrite($file, $text);
         fclose($file);
         return $this->render('yandex_disk');
     }
@@ -595,5 +596,29 @@ class SiteController extends Controller
     public function actionTestPage()
     {
         return $this->render('test_page');
+    }
+
+    public function actionUploadFiles()
+    {
+        Yii::info(__METHOD__, 'test');
+        $request = Yii::$app->request;
+        $model = new UploadForm();
+        $files = '';
+
+        if ($request->isPost){
+            Yii::info('Is Post', 'test');
+
+            $model->files = UploadedFile::getInstances($model, 'files');
+            if ($model->upload()){
+              $files = $model->files;
+            } else {
+                $files = $model->errors;
+            }
+        }
+
+        return $this->render('upload_files', [
+            'model' => $model,
+            'files' => $files
+        ]);
     }
 }

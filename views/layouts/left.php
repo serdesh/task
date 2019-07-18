@@ -79,6 +79,7 @@
                                 ['label' => 'Отправка файла', 'icon' => 'share', 'url' => ['/site/send-file']],
                                 ['label' => 'Отправка почты', 'icon' => 'envelope', 'url' => ['/site/contact']],
                                 ['label' => 'Прием почты', 'icon' => 'envelope', 'url' => ['/site/mail']],
+                                ['label' => 'Загрузка файлов', 'icon' => 'download', 'url' => ['/site/upload-files']],
                             ],
                         ],
                         ['label' => 'Gii', 'icon' => 'user-o', 'url' => ['/gii']],
