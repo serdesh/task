@@ -9,20 +9,20 @@ use yii\helpers\Url;
 /* @var $data app\models\Task */
 
 return [
-//    [
-//        'class' => 'kartik\grid\CheckboxColumn',
-//        'width' => '20px',
-//    ],
-//    [
-//        'class' => 'kartik\grid\SerialColumn',
-//        'width' => '30px',
-//    ],
+
     [
         'class' => '\kartik\grid\DataColumn',
         'attribute' => 'id',
         'label' => '#',
         'filter' => false,
         'vAlign' => 'middle',
+    ],
+    [
+        'class' => '\kartik\grid\DataColumn',
+        'attribute' => 'done_date',
+        'filter' => false,
+        'vAlign' => 'middle',
+        'format' => 'date',
     ],
     [
         'class' => '\kartik\grid\EditableColumn',

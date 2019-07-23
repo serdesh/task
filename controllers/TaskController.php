@@ -6,6 +6,7 @@ use app\models\Project;
 use Yii;
 use app\models\Task;
 use app\models\search\TaskSearch;
+use yii\data\ActiveDataProvider;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
@@ -67,7 +68,9 @@ class TaskController extends Controller
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
         $dataProvider->setSort([
             'attributes' => [
-                'start', 'status', 'id'
+                'start',
+                'status',
+                'id'
             ],
             'defaultOrder' => [
                 'start' => SORT_DESC,
@@ -130,12 +133,14 @@ class TaskController extends Controller
                     'content' => $this->renderAjax('create', [
                         'model' => $model,
                     ]),
-                    'footer' => Html::button('Close', ['class' => 'btn btn-default pull-left', 'data-dismiss' => "modal"]) .
+                    'footer' => Html::button('Close',
+                            ['class' => 'btn btn-default pull-left', 'data-dismiss' => "modal"]) .
                         Html::button('Save', ['class' => 'btn btn-primary', 'type' => "submit"])
 
                 ];
-            } else if ($model->load($request->post()) && $model->save()) {
-                return $this->redirect('/task/index');
+            } else {
+                if ($model->load($request->post()) && $model->save()) {
+                    return $this->redirect('/task/index');
 
 //                return [
 //                    'forceReload' => '#crud-datatable-pjax',
@@ -145,16 +150,18 @@ class TaskController extends Controller
 //                        Html::a('Create More', ['create'], ['class' => 'btn btn-primary', 'role' => 'modal-remote'])
 //
 //                ];
-            } else {
-                return [
-                    'title' => "Create new Task",
-                    'content' => $this->renderAjax('create', [
-                        'model' => $model,
-                    ]),
-                    'footer' => Html::button('Close', ['class' => 'btn btn-default pull-left', 'data-dismiss' => "modal"]) .
-                        Html::button('Save', ['class' => 'btn btn-primary', 'type' => "submit"])
+                } else {
+                    return [
+                        'title' => "Create new Task",
+                        'content' => $this->renderAjax('create', [
+                            'model' => $model,
+                        ]),
+                        'footer' => Html::button('Close',
+                                ['class' => 'btn btn-default pull-left', 'data-dismiss' => "modal"]) .
+                            Html::button('Save', ['class' => 'btn btn-primary', 'type' => "submit"])
 
-                ];
+                    ];
+                }
             }
         } else {
             /*
@@ -195,10 +202,12 @@ class TaskController extends Controller
                     'content' => $this->renderAjax('update', [
                         'model' => $model,
                     ]),
-                    'footer' => Html::button('Закрыть', ['class' => 'btn btn-default pull-left', 'data-dismiss' => "modal"]) .
+                    'footer' => Html::button('Закрыть',
+                            ['class' => 'btn btn-default pull-left', 'data-dismiss' => "modal"]) .
                         Html::button('Сохранить', ['class' => 'btn btn-primary', 'type' => "submit"])
                 ];
-            } else if ($model->load($request->post()) && $model->save()) {
+            } else {
+                if ($model->load($request->post()) && $model->save()) {
                     return $this->redirect('/task/index');
 //                return [
 //                    'forceReload' => '#crud-datatable-pjax',
@@ -210,15 +219,17 @@ class TaskController extends Controller
 //                    'footer' => Html::button('Close', ['class' => 'btn btn-default pull-left', 'data-dismiss' => "modal"]) .
 //                        Html::a('Edit', ['update', 'id' => $id], ['class' => 'btn btn-primary', 'role' => 'modal-remote'])
 //                ];
-            } else {
-                return [
-                    'title' => "Редактирование задачи #" . $id,
-                    'content' => $this->renderAjax('update', [
-                        'model' => $model,
-                    ]),
-                    'footer' => Html::button('Закрыть', ['class' => 'btn btn-default pull-left', 'data-dismiss' => "modal"]) .
-                        Html::button('Сохранить', ['class' => 'btn btn-primary', 'type' => "submit"])
-                ];
+                } else {
+                    return [
+                        'title' => "Редактирование задачи #" . $id,
+                        'content' => $this->renderAjax('update', [
+                            'model' => $model,
+                        ]),
+                        'footer' => Html::button('Закрыть',
+                                ['class' => 'btn btn-default pull-left', 'data-dismiss' => "modal"]) .
+                            Html::button('Сохранить', ['class' => 'btn btn-primary', 'type' => "submit"])
+                    ];
+                }
             }
         } else {
             /*
@@ -329,7 +340,7 @@ class TaskController extends Controller
             Yii::$app->session->setFlash('error', 'Ошибка добавления');
         }
         Yii::$app->response->format = Response::FORMAT_JSON;
-        return ['forceClose'=>true,'forceReload'=>'#crud-datatable-pjax'];
+        return ['forceClose' => true, 'forceReload' => '#crud-datatable-pjax'];
 //        return $this->redirect(['index']);
     }
 
@@ -364,14 +375,14 @@ class TaskController extends Controller
                 Yii::$app->session->setFlash('error', 'Ошибка сохранения общего времени');
             } else {
                 $model->start = null;
-                if (!$model->save()){
+                if (!$model->save()) {
                     Yii::error($model->errors, __METHOD__);
                     Yii::$app->session->setFlash('error', 'Ошибка обнуления старт/стоп');
                 }
             }
         } else {
             $model->start = date('Y-m-d H:i', time());
-            if (!$model->save()){
+            if (!$model->save()) {
                 Yii::error($model->errors, __METHOD__);
                 Yii::$app->session->setFlash('error', 'Ошибка сохранения старт/стоп');
             }
@@ -398,7 +409,7 @@ class TaskController extends Controller
 
         Yii::info('Status before: ' . $model->status, 'test');
 
-        if (!$model->save()){
+        if (!$model->save()) {
             Yii::error($model->errors, __METHOD__);
             return 'error';
         }
@@ -425,11 +436,46 @@ class TaskController extends Controller
 
         $model->project_id = $project_id;
 
-        if (!$model->save()){
+        if (!$model->save()) {
             Yii::error($model->errors, __METHOD__);
             return ['error'];
         }
 
         return ['success', $project_name];
     }
+
+    public function actionReport()
+    {
+        $request = Yii::$app->request;
+        $model = new Task();
+
+        $dataProvider = new ActiveDataProvider([
+            'query' => Task::find()
+                ->joinWith(['project p'])
+                ->andWhere(['task.status' => 1])//Завершенная задача
+                ->andWhere(['p.exclude_statistic' => 0]) //Не исключенные из статистики
+        ]);
+
+        if ($request->isPost) {
+            if ($model->load($request->post())){
+                $dataProvider->query
+                    ->andWhere(['BETWEEN', 'task.done_date', $model->start_period, $model->end_period]);
+            } else {
+                Yii::$app->session->setFlash('error', 'Ошибка загрузки данных модели');
+            return $this->redirect('report');
+        }
+
+
+        }
+        $dataProvider->setSort([
+            'defaultOrder' => [
+                'done_date' => SORT_DESC,
+            ]
+        ]);
+        return $this->render('report', [
+            'dataProvider' => $dataProvider,
+            'model' => $model,
+        ]);
+    }
+
 }

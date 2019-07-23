@@ -3,6 +3,7 @@
 namespace app\controllers;
 
 use app\models\Auth;
+use app\models\Project;
 use app\models\UploadForm;
 use Google_Client;
 use Google_Service_Drive;
@@ -603,6 +604,7 @@ class SiteController extends Controller
         Yii::info(__METHOD__, 'test');
         $request = Yii::$app->request;
         $model = new UploadForm();
+        $project_model = new Project();
         $files = '';
 
         if ($request->isPost){
@@ -618,6 +620,7 @@ class SiteController extends Controller
 
         return $this->render('upload_files', [
             'model' => $model,
+            'project' => $project_model,
             'files' => $files
         ]);
     }

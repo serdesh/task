@@ -18,6 +18,8 @@ use yii\helpers\ArrayHelper;
  * @property string $notes заметки
  * @property int $project_id ID проекта
  * @property string $done_date Дата завершения задачи
+ * @property string $start_period Дата начала периода для отчета
+ * @property string $end_period Дата завершения периода для отчета
  *
  * @property Project $project
  */
@@ -25,6 +27,9 @@ class Task extends ActiveRecord
 {
     const TASK_STATUS_IN_WORK = 0;
     const TASK_STATUS_DONE = 1;
+
+    public $start_period;
+    public $end_period;
 
     /**
      * {@inheritdoc}
@@ -43,7 +48,14 @@ class Task extends ActiveRecord
             [['description', 'notes'], 'string'],
             [['start', 'all_time'], 'safe'],
             [['status', 'project_id'], 'integer'],
-            [['project_id'], 'exist', 'skipOnError' => true, 'targetClass' => Project::className(), 'targetAttribute' => ['project_id' => 'id']],
+            [
+                ['project_id'],
+                'exist',
+                'skipOnError' => true,
+                'targetClass' => Project::className(),
+                'targetAttribute' => ['project_id' => 'id']
+            ],
+            [['start_period', 'end_period'], 'safe'],
         ];
     }
 
@@ -56,11 +68,13 @@ class Task extends ActiveRecord
             'id' => 'ID',
             'description' => 'Описание',
             'start' => 'Начало',
-            'all_time' => 'Общее время (мин.)',
+            'all_time' => 'Общее время',
             'status' => 'Статус',
             'notes' => 'Примечание',
             'project_id' => 'Проект',
             'done_date' => 'Дата завершения',
+            'start_period' => 'Начало периода',
+            'end_period' => 'Конец периода',
         ];
     }
 
@@ -177,18 +191,37 @@ class Task extends ActiveRecord
 
     }
 
-    public static function formatMinutes($all_min){
+    public static function formatMinutes($all_min)
+    {
         $hour = (int)($all_min / 60);
 
-        if ($hour < 1) $hour = 0;
+        if ($hour < 1) {
+            $hour = 0;
+        }
 
         $min = $all_min - ($hour * 60);
 
-        if ($hour == 0){
-            return  $min . ' мин.';
+        if ($hour == 0) {
+            return $min . ' мин.';
         } else {
             return $hour . ' ч. ' . $min . ' мин.';
         }
+
+    }
+
+    /**
+     *
+     */
+    public function getAllDoneTime()
+    {
+        $minutes = Task::find()
+            ->joinWith(['project p'])
+            ->andWhere(['task.status' => 1])//Завершенная задача
+            ->andWhere(['p.exclude_statistic' => 0]) //Не исключенные из статистики
+            ->andWhere(['BETWEEN', 'task.done_date', $this->start_period, $this->end_period])
+            ->sum('all_time');
+
+        return self::formatMinutes($minutes);
 
     }
 

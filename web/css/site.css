@@ -133,3 +133,12 @@ a.desc:after {
 #resident-btn{
     margin-right: 1rem;
 }
+
+.filter-report{
+    display: flex;
+    align-items: center;
+}
+
+.filter-report button {
+    margin-top: 7px;
+}

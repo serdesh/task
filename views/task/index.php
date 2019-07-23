@@ -5,7 +5,6 @@ use yii\helpers\Html;
 use yii\bootstrap\Modal;
 use kartik\grid\GridView;
 use johnitvn\ajaxcrud\CrudAsset;
-use johnitvn\ajaxcrud\BulkButtonWidget;
 
 /* @var $this yii\web\View */
 /* @var $searchModel app\models\search\TaskSearch */
@@ -53,18 +52,19 @@ $dataProvider->pagination->pageSize = 40;
                         'type' => 'primary',
                         'heading' => '<i class="glyphicon glyphicon-list"></i> Список задач',
                         'before' => '<em>Время завершенных задач за текущий месяц: ' . Task::getDoneTimePerMonth() . '</em>',
-                        'after' => BulkButtonWidget::widget([
-                                'buttons' => Html::a('<i class="glyphicon glyphicon-trash"></i>&nbsp; Удалить выделенное',
-                                    ["bulkdelete"],
-                                    [
-                                        "class" => "btn btn-danger btn-xs",
-                                        'role' => 'modal-remote-bulk',
-                                        'data-confirm' => false, 'data-method' => false,// for overide yii data api
-                                        'data-request-method' => 'post',
-                                        'data-confirm-title' => 'Are you sure?',
-                                        'data-confirm-message' => 'Are you sure want to delete this item'
-                                    ]),
-                            ]) .
+                        'after' =>
+//                            BulkButtonWidget::widget([
+//                                'buttons' => Html::a('<i class="glyphicon glyphicon-trash"></i>&nbsp; Удалить выделенное',
+//                                    ["bulkdelete"],
+//                                    [
+//                                        "class" => "btn btn-danger btn-xs",
+//                                        'role' => 'modal-remote-bulk',
+//                                        'data-confirm' => false, 'data-method' => false,// for overide yii data api
+//                                        'data-request-method' => 'post',
+//                                        'data-confirm-title' => 'Are you sure?',
+//                                        'data-confirm-message' => 'Are you sure want to delete this item'
+//                                    ]),
+//                            ]) .
                             '<div class="clearfix"></div>',
                     ]
                 ]);
@@ -96,7 +96,7 @@ $script = <<<JS
                 },
                 function(response) {
                   console.log(response);
-                  if ((response == 'success') && (selected_value == '1')){
+                  if ((response === 'success') && (selected_value === '1')){
                       //if status DONE
                       select.hide();
                       var td = select.parent('td');
@@ -121,7 +121,7 @@ $script = <<<JS
                 },
                 function(response) {
                   console.log(response);
-                  if (response[0] == 'success'){
+                  if (response[0] === 'success'){
                       //if status DONE
                       select.hide();
                       var td = select.parent('td');
