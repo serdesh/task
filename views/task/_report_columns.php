@@ -84,38 +84,6 @@ return [
         'width' => '110px',
     ],
     [
-        'class' => '\kartik\grid\DataColumn',
-        'value' => function ($data) {
-            if (!$data->status) {
-                if ($data->start) {
-                    return Html::a('Стоп', ['start-task', 'id' => $data->id], [
-                        'class' => 'btn btn-danger',
-                        'id' => 'start-btn-' . $data->id,
-                    ]);
-                }
-                return Html::a('Старт', ['start-task', 'id' => $data->id], [
-                    'class' => 'btn btn-success',
-                    'id' => 'start-btn-' . $data->id,
-                ]);
-            }
-            return '';
-        },
-        'format' => 'raw',
-        'vAlign' => 'middle',
-    ],
-    [
-        'class' => '\kartik\grid\DataColumn',
-        'attribute' => 'notes',
-        'value' => function ($data) {
-            if ($data->status == Task::TASK_STATUS_IN_WORK) {
-                return $data->notes;
-            }
-            //Если задача завершена, комментарий не выводим
-            return '';
-        },
-        'format' => 'nText',
-    ],
-    [
         'class' => 'kartik\grid\ActionColumn',
         'dropdown' => false,
         'vAlign' => 'middle',
