@@ -34,7 +34,9 @@
     "yiisoft/yii2-httpclient": "^2.0@dev",
     "arhitector/yandex": "dev-master",
     "php-imap/php-imap": "dev-master",
-    "kartik-v/yii2-widget-datepicker": "dev-master"
+    "kartik-v/yii2-widget-datepicker": "dev-master",
+    "kartik-v/yii2-widget-switchinput": "dev-master",
+    "kartik-v/yii2-widget-select2": "dev-master"
   },
   "require-dev": {
     "yiisoft/yii2-debug": "~2.0.0",

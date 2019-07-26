@@ -453,16 +453,23 @@ class TaskController extends Controller
             'query' => Task::find()
                 ->joinWith(['project p'])
                 ->andWhere(['task.status' => 1])//Завершенная задача
-                ->andWhere(['p.exclude_statistic' => 0]) //Не исключенные из статистики
         ]);
 
         if ($request->isPost) {
             if ($model->load($request->post())){
                 $dataProvider->query
                     ->andWhere(['BETWEEN', 'task.done_date', $model->start_period, $model->end_period]);
+                if (!$model->search_all){
+                    $dataProvider->query
+                        ->andWhere(['p.exclude_statistic' => 0]); //Не исключенные из статистики
+                }
+                if (count($model->projects) > 0 && $model->projects != ''){
+                    $dataProvider->query
+                    ->andWhere(['IN', 'p.id', $model->projects]);
+                }
             } else {
                 Yii::$app->session->setFlash('error', 'Ошибка загрузки данных модели');
-            return $this->redirect('report');
+            return $this->redirect('report?search_all=' . $model->search_all);
         }
 
 

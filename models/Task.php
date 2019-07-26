@@ -30,6 +30,8 @@ class Task extends ActiveRecord
 
     public $start_period;
     public $end_period;
+    public $search_all = 0;
+    public $projects;
 
     /**
      * {@inheritdoc}
@@ -46,8 +48,8 @@ class Task extends ActiveRecord
     {
         return [
             [['description', 'notes'], 'string'],
-            [['start', 'all_time'], 'safe'],
-            [['status', 'project_id'], 'integer'],
+            [['start', 'all_time', 'projects'], 'safe'],
+            [['status', 'project_id', 'search_all'], 'integer'],
             [
                 ['project_id'],
                 'exist',
@@ -75,6 +77,7 @@ class Task extends ActiveRecord
             'done_date' => 'Дата завершения',
             'start_period' => 'Начало периода',
             'end_period' => 'Конец периода',
+            'projects' => 'Проект',
         ];
     }
 
@@ -210,15 +213,22 @@ class Task extends ActiveRecord
     }
 
     /**
-     *
+     * Получает общее время задач
+     * @param $all_project
+     * @return string
      */
-    public function getAllDoneTime()
+    public function getAllDoneTime($all_project)
     {
-        $minutes = Task::find()
+        $query = Task::find()
             ->joinWith(['project p'])
             ->andWhere(['task.status' => 1])//Завершенная задача
-            ->andWhere(['p.exclude_statistic' => 0]) //Не исключенные из статистики
-            ->andWhere(['BETWEEN', 'task.done_date', $this->start_period, $this->end_period])
+            ->andWhere(['BETWEEN', 'task.done_date', $this->start_period, $this->end_period]);
+
+        if (!$all_project) {
+            //Если не учитывать проекты в исключениях
+            $query->andWhere(['p.exclude_statistic' => 0]);
+        }
+        $minutes = $query
             ->sum('all_time');
 
         return self::formatMinutes($minutes);

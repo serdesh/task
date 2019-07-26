@@ -1,7 +1,11 @@
 <?php
 
+use app\models\Project;
 use app\models\Task;
 use kartik\date\DatePicker;
+use kartik\select2\Select2;
+use kartik\switchinput\SwitchInput;
+use yii\helpers\ArrayHelper;
 use yii\helpers\Html;
 use yii\bootstrap\Modal;
 use kartik\grid\GridView;
@@ -15,14 +19,16 @@ use yii\widgets\ActiveForm;
 
 $this->title = 'Задачи';
 $this->params['breadcrumbs'][] = $this->title;
+$post = Yii::$app->request->post();
 
 CrudAsset::register($this);
 
 $dataProvider->pagination->pageSize = 40;
 
-if ($model->start_period){
-    $before_text = '<em>Время завершенных задач за период: ' . $model->getAllDoneTime() . '</em>' ;
+if ($model->start_period) {
+    $before_text = '<em>Время завершенных задач за период: ' . $model->getAllDoneTime($model->search_all) . '</em>';
 } else {
+    $before_text = '';
     $sum = '';
 }
 
@@ -31,20 +37,27 @@ if ($model->start_period){
         <?php $form = ActiveForm::begin(); ?>
 
         <div class="row filter-report">
-            <div class="col-md-5">
+                <div class="col-md-3">
                 <?= $form->field($model, 'start_period')->widget(DatePicker::class, [
                     'type' => DatePicker::TYPE_COMPONENT_APPEND,
+                    'options' => [
+                        'autocomplete' => 'off',
+                    ],
                     'pluginOptions' => [
                         'startView' => 'months',
                         'format' => 'yyyy-mm-dd',
+//                        'format' => 'dd.mm.yyyy',
                         'allowClear' => true,
                         'closeOnSelect' => true,
                     ]
                 ]) ?>
             </div>
-            <div class="col-md-5">
+            <div class="col-md-3">
                 <?= $form->field($model, 'end_period')->widget(DatePicker::class, [
                     'type' => DatePicker::TYPE_COMPONENT_APPEND,
+                    'options' => [
+                        'autocomplete' => 'off',
+                    ],
                     'pluginOptions' => [
                         'startView' => 'months',
                         'format' => 'yyyy-mm-dd',
@@ -53,7 +66,33 @@ if ($model->start_period){
                     ]
                 ]) ?>
             </div>
-            <div class="col-md-2">
+            <div class="col-md-6">
+                <?= $form->field($model, 'projects')->widget(Select2::class, [
+                    'language' => 'ru',
+//                    'value' => $post['projects'],
+                    'data' => Arrayhelper::map(Project::find()->all(), 'id', 'name'),
+                    'size' => Select2::MEDIUM,
+                    'options' => ['placeholder' => 'Проекты', 'multiple' => true],
+                    'pluginOptions' => [
+                        'allowClear' => true
+                    ],
+                ]) ?>
+            </div>
+
+        </div>
+        <div class="row">
+            <div class="col-md-6">
+                <?= $form->field($model, 'search_all')->widget(SwitchInput::class, [
+                    'pluginOptions' => [
+                        'size' => 'large',
+                        'onColor' => 'success',
+                        'offColor' => 'error',
+                        'onText' => 'Поиск по всем проектам',
+                        'offText' => 'Не искать в исключениях'
+                    ]
+                ])->label(false) ?>
+            </div>
+            <div class="col-md-6">
                 <?= Html::submitButton('Показать',
                     ['class' => 'btn btn-success btn-block']) ?>
             </div>
