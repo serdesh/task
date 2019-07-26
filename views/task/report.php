@@ -26,7 +26,7 @@ CrudAsset::register($this);
 $dataProvider->pagination->pageSize = 40;
 
 if ($model->start_period) {
-    $before_text = '<em>Время завершенных задач за период: ' . $model->getAllDoneTime($model->search_all) . '</em>';
+    $before_text = '<em>Время завершенных задач за период: ' . $model->getAllDoneTime($model->search_all, $model->projects) . '</em>';
 } else {
     $before_text = '';
     $sum = '';

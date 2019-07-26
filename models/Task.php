@@ -215,9 +215,10 @@ class Task extends ActiveRecord
     /**
      * Получает общее время задач
      * @param $all_project
+     * @param array $projects
      * @return string
      */
-    public function getAllDoneTime($all_project)
+    public function getAllDoneTime($all_project, $projects = [])
     {
         $query = Task::find()
             ->joinWith(['project p'])
@@ -227,6 +228,10 @@ class Task extends ActiveRecord
         if (!$all_project) {
             //Если не учитывать проекты в исключениях
             $query->andWhere(['p.exclude_statistic' => 0]);
+        }
+
+        if ($projects){
+            $query->andWhere(['IN', 'p.id', $projects]);
         }
         $minutes = $query
             ->sum('all_time');
