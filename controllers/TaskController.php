@@ -456,21 +456,21 @@ class TaskController extends Controller
         ]);
 
         if ($request->isPost) {
-            if ($model->load($request->post())){
+            if ($model->load($request->post())) {
                 $dataProvider->query
                     ->andWhere(['BETWEEN', 'task.done_date', $model->start_period, $model->end_period]);
-                if (!$model->search_all){
+                if (!$model->search_all) {
                     $dataProvider->query
                         ->andWhere(['p.exclude_statistic' => 0]); //Не исключенные из статистики
                 }
-                if (count($model->projects) > 0 && $model->projects != ''){
+                if (count($model->projects) > 0 && $model->projects != '') {
                     $dataProvider->query
-                    ->andWhere(['IN', 'p.id', $model->projects]);
+                        ->andWhere(['IN', 'p.id', $model->projects]);
                 }
             } else {
                 Yii::$app->session->setFlash('error', 'Ошибка загрузки данных модели');
-            return $this->redirect('report?search_all=' . $model->search_all);
-        }
+                return $this->redirect('report?search_all=' . $model->search_all);
+            }
 
 
         }
@@ -481,6 +481,19 @@ class TaskController extends Controller
         ]);
         return $this->render('report', [
             'dataProvider' => $dataProvider,
+            'model' => $model,
+        ]);
+    }
+
+    public function actionDecoder()
+    {
+        $request = Yii::$app->request;
+        $model = new Task();
+
+        if ($request->isPost){
+            $model->load($request->post());
+        }
+        return $this->render('decoder',[
             'model' => $model,
         ]);
     }
