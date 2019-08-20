@@ -140,16 +140,12 @@ class TaskController extends Controller
                 ];
             } else {
                 if ($model->load($request->post()) && $model->save()) {
-                    return $this->redirect('/task/index');
 
-//                return [
-//                    'forceReload' => '#crud-datatable-pjax',
-//                    'title' => "Create new Task",
-//                    'content' => '<span class="text-success">Create Task success</span>',
-//                    'footer' => Html::button('Close', ['class' => 'btn btn-default pull-left', 'data-dismiss' => "modal"]) .
-//                        Html::a('Create More', ['create'], ['class' => 'btn btn-primary', 'role' => 'modal-remote'])
-//
-//                ];
+                return [
+                    'forceReload' => '#crud-datatable-pjax',
+                    'forceClose' => 'true',
+
+                ];
                 } else {
                     return [
                         'title' => "Create new Task",
