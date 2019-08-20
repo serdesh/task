@@ -28,6 +28,10 @@ $dataProvider->pagination->pageSize = 40;
 if (!$model->start_period) {
     $model->start_period = '2010-01-01';
 }
+if (!$model->end_period) {
+    $model->end_period = date('Y-m-d', time());
+}
+
 $before_text = '<em>Время завершенных задач за период: ' . $model->getAllDoneTime($model->search_all, $model->projects) . '</em>';
 
 
