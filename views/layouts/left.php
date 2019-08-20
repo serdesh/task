@@ -33,7 +33,7 @@
                     'items' => [
                         ['label' => 'Menu Yii2', 'options' => ['class' => 'header']],
                         ['label' => 'Задачник', 'icon' => 'calendar', 'url' => ['/task']],
-                        ['label' => 'Json декодер', 'icon' => 'calendar', 'url' => ['/task/decoder']],
+                        ['label' => 'Json декодер', 'icon' => 'barcode', 'url' => ['/task/decoder']],
                         ['label' => 'Отчет', 'icon' => 'bar-chart', 'url' => ['/task/report']],
                         [
                             'label' => 'Справочник',

@@ -457,6 +457,9 @@ class TaskController extends Controller
 
         if ($request->isPost) {
             if ($model->load($request->post())) {
+                if (!$model->end_period){
+                    $model->end_period = date('Y-m-d', time());
+                }
                 $dataProvider->query
                     ->andWhere(['BETWEEN', 'task.done_date', $model->start_period, $model->end_period]);
                 if (!$model->search_all) {

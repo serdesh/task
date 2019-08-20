@@ -25,17 +25,15 @@ CrudAsset::register($this);
 
 $dataProvider->pagination->pageSize = 40;
 
-if ($model->start_period) {
-    $before_text = '<em>Время завершенных задач за период: ' . $model->getAllDoneTime($model->search_all, $model->projects) . '</em>';
-} else {
-    $before_text = '';
-    $sum = '';
+if (!$model->start_period) {
+    $model->start_period = '2010-01-01';
 }
+$before_text = '<em>Время завершенных задач за период: ' . $model->getAllDoneTime($model->search_all, $model->projects) . '</em>';
+
 
 ?>
     <div class="task-report-form">
         <?php $form = ActiveForm::begin(); ?>
-
         <div class="row filter-report">
                 <div class="col-md-3">
                 <?= $form->field($model, 'start_period')->widget(DatePicker::class, [
@@ -99,6 +97,7 @@ if ($model->start_period) {
         </div>
         <?php ActiveForm::end(); ?>
     </div>
+
     <div class="task-report">
         <div id="ajaxCrudDatatable">
             <?php try {

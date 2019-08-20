@@ -11,12 +11,15 @@ use yii\helpers\Url;
 return [
 
     [
-        'class' => '\kartik\grid\DataColumn',
-        'attribute' => 'id',
-        'label' => '#',
-        'filter' => false,
-        'vAlign' => 'middle',
+        'class' => '\kartik\grid\SerialColumn',
     ],
+//    [
+//        'class' => '\kartik\grid\DataColumn',
+//        'attribute' => 'id',
+//        'label' => '#',
+//        'filter' => false,
+//        'vAlign' => 'middle',
+//    ],
     [
         'class' => '\kartik\grid\DataColumn',
         'attribute' => 'done_date',
