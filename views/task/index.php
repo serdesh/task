@@ -130,6 +130,33 @@ $script = <<<JS
                 }
             )
         });
+        $(document).on('click', '.start-btn', function(e) {
+            e.preventDefault();
+            var btn = $(this);
+            var task_id = btn.attr('data-id');
+            $.get(
+                '/task/start-task',
+                {
+                    id: task_id
+                },
+                function(response) {
+                    if (response['success'] === 1){
+                        if (btn.html() === 'Стоп'){
+                            btn.html('Старт');
+                            btn.removeClass('btn-danger');
+                            btn.addClass('btn-success');
+                        } else {
+                            btn.html('Стоп');
+                            btn.removeClass('btn-success');
+                            btn.addClass('btn-danger');
+                        }
+                    } else {
+                        //Выводим текст ошибки
+                         alert(response['data']);
+                    }
+                }
+            )
+        })
     })
 JS;
 

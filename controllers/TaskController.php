@@ -129,32 +129,30 @@ class TaskController extends Controller
             Yii::$app->response->format = Response::FORMAT_JSON;
             if ($request->isGet) {
                 return [
-                    'title' => "Create new Task",
+                    'title' => "Создание задачи",
                     'content' => $this->renderAjax('create', [
                         'model' => $model,
                     ]),
-                    'footer' => Html::button('Close',
+                    'footer' => Html::button('Закрыть',
                             ['class' => 'btn btn-default pull-left', 'data-dismiss' => "modal"]) .
-                        Html::button('Save', ['class' => 'btn btn-primary', 'type' => "submit"])
+                        Html::button('Сохранить', ['class' => 'btn btn-primary', 'type' => "submit"])
 
                 ];
             } else {
                 if ($model->load($request->post()) && $model->save()) {
-
-                return [
-                    'forceReload' => '#crud-datatable-pjax',
-                    'forceClose' => 'true',
-
-                ];
+                    return [
+                        'forceReload' => '#crud-datatable-pjax',
+                        'forceClose' => 'true',
+                    ];
                 } else {
                     return [
-                        'title' => "Create new Task",
+                        'title' => "Создание задачи",
                         'content' => $this->renderAjax('create', [
                             'model' => $model,
                         ]),
-                        'footer' => Html::button('Close',
+                        'footer' => Html::button('Закрыть',
                                 ['class' => 'btn btn-default pull-left', 'data-dismiss' => "modal"]) .
-                            Html::button('Save', ['class' => 'btn btn-primary', 'type' => "submit"])
+                            Html::button('Сохранить', ['class' => 'btn btn-primary', 'type' => "submit"])
 
                     ];
                 }
@@ -319,7 +317,7 @@ class TaskController extends Controller
         if (($model = Task::findOne($id)) !== null) {
             return $model;
         } else {
-            throw new NotFoundHttpException('The requested page does not exist.');
+            throw new NotFoundHttpException('Запрашиваемая страница не существует.');
         }
     }
 
@@ -342,11 +340,12 @@ class TaskController extends Controller
 
     /**
      * @param int $id ID задачи
-     * @return Response
+     * @return array При удачном выполнении возвращает ['success' => 1], при ошибке ['success' => 0, 'data' => 'Текст ошибки']
      * @throws NotFoundHttpException
      */
     public function actionStartTask($id)
     {
+        Yii::$app->response->format = Response::FORMAT_JSON;
         $model = $this->findModel($id);
 
         if ($model->start) {
@@ -367,23 +366,23 @@ class TaskController extends Controller
             }
 
             if (!$model->save()) {
-                Yii::error($model->errors, __METHOD__);
-                Yii::$app->session->setFlash('error', 'Ошибка сохранения общего времени');
+                Yii::error($model->errors, 'error');
+                return ['success' => 0, 'data' => 'Ошибка сохранения общего времени'];
             } else {
                 $model->start = null;
                 if (!$model->save()) {
                     Yii::error($model->errors, __METHOD__);
-                    Yii::$app->session->setFlash('error', 'Ошибка обнуления старт/стоп');
+                    return ['success' => 0, 'data' => 'Ошибка обнуления старт/стоп'];
                 }
             }
         } else {
             $model->start = date('Y-m-d H:i', time());
             if (!$model->save()) {
                 Yii::error($model->errors, __METHOD__);
-                Yii::$app->session->setFlash('error', 'Ошибка сохранения старт/стоп');
+                return ['success' => 0, 'data' => 'Ошибка сохранения старт/стоп'];
             }
         }
-        return $this->redirect('/task/index');
+        return ['success' => 1];
     }
 
     /**
@@ -453,7 +452,7 @@ class TaskController extends Controller
 
         if ($request->isPost) {
             if ($model->load($request->post())) {
-                if (!$model->end_period){
+                if (!$model->end_period) {
                     $model->end_period = date('Y-m-d', time());
                 }
                 $dataProvider->query
@@ -489,10 +488,10 @@ class TaskController extends Controller
         $request = Yii::$app->request;
         $model = new Task();
 
-        if ($request->isPost){
+        if ($request->isPost) {
             $model->load($request->post());
         }
-        return $this->render('decoder',[
+        return $this->render('decoder', [
             'model' => $model,
         ]);
     }

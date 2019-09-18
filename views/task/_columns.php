@@ -85,17 +85,17 @@ return [
     ],
     [
         'class' => '\kartik\grid\DataColumn',
-        'value' => function ($data) {
+        'value' => function (Task $data) {
             if (!$data->status) {
                 if ($data->start) {
-                    return Html::a('Стоп', ['start-task', 'id' => $data->id], [
-                        'class' => 'btn btn-danger',
-                        'id' => 'start-btn-' . $data->id,
+                    return Html::a('Стоп', ['#'], [
+                        'class' => 'btn btn-danger start-btn',
+                        'data-id' => $data->id,
                     ]);
                 }
-                return Html::a('Старт', ['start-task', 'id' => $data->id], [
-                    'class' => 'btn btn-success',
-                    'id' => 'start-btn-' . $data->id,
+                return Html::a('Старт', ['#'], [
+                    'class' => 'btn btn-success start-btn',
+                    'data-id' => $data->id,
                 ]);
             }
             return '';
