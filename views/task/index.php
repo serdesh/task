@@ -145,6 +145,7 @@ $script = <<<JS
                             btn.html('Старт');
                             btn.removeClass('btn-danger');
                             btn.addClass('btn-success');
+                            $('#time-' + task_id).html(response['time']);
                         } else {
                             btn.html('Стоп');
                             btn.removeClass('btn-success');

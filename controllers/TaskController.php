@@ -382,7 +382,9 @@ class TaskController extends Controller
                 return ['success' => 0, 'data' => 'Ошибка сохранения старт/стоп'];
             }
         }
-        return ['success' => 1];
+
+        $time = Task::formatMinutes($model->all_time);
+        return ['success' => 1, 'time' => $time];
     }
 
     /**

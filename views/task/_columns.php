@@ -62,8 +62,11 @@ return [
         'class' => '\kartik\grid\DataColumn',
         'attribute' => 'all_time',
         'value' => function ($data) {
-            return Task::formatMinutes($data->all_time);
+            return Html::tag('p',  Task::formatMinutes($data->all_time), [
+                'id' => 'time-' . $data->id,
+            ]);
         },
+        'format' => 'raw',
         'vAlign' => 'middle',
     ],
     [
