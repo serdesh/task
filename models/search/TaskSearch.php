@@ -17,7 +17,7 @@ class TaskSearch extends Task
     public function rules()
     {
         return [
-            [['id', 'status', 'project_id'], 'integer'],
+            [['id', 'status', 'project_id', 'paid'], 'integer'],
             [['description', 'start', 'all_time', 'notes', 'done_date'], 'safe'],
         ];
     }
@@ -45,6 +45,9 @@ class TaskSearch extends Task
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
         ]);
+        if (!$params) {
+            $query->andWhere(['paid' => 0]);
+        }
 
         $this->load($params);
 

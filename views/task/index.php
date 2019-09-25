@@ -1,6 +1,7 @@
 <?php
 
 use app\models\Task;
+use johnitvn\ajaxcrud\BulkButtonWidget;
 use yii\helpers\Html;
 use yii\bootstrap\Modal;
 use kartik\grid\GridView;
@@ -27,10 +28,12 @@ $dataProvider->pagination->pageSize = 40;
                     'filterModel' => $searchModel,
                     'pjax' => true,
                     'rowOptions' => function ($model) {
-                        if (isset($model->project->exclude_statistic)){
+                        if (isset($model->project->exclude_statistic) && $model->paid == 0){
                             if ($model->project->exclude_statistic){
                                 return ['class' => 'warning'];
                             }
+                        } elseif ($model->paid == 1){
+                            return ['class' => 'success'];
                         }
                         return null;
                     },
@@ -38,7 +41,9 @@ $dataProvider->pagination->pageSize = 40;
                     'toolbar' => [
                         ['content' =>
                             Html::a('<i class="glyphicon glyphicon-plus"></i>', ['add-empty-task'],
-                                ['role' => 'modal-remote', 'title' => 'Create new Tasks', 'class' => 'btn btn-default']) .
+                                ['role' => 'modal-remote', 'title' => 'Добавить задачу', 'class' => 'btn btn-default']) .
+                            Html::a('Показать всё', ['index', 'TaskSearch[paid]' => [0, 1]],
+                                ['title' => 'Отобразить все задачи', 'class' => 'btn btn-default']) .
                             Html::a('<i class="glyphicon glyphicon-repeat"></i>', [''],
                                 ['data-pjax' => 1, 'class' => 'btn btn-default', 'title' => 'Reset Grid']) .
                             '{toggleData}' .
@@ -53,18 +58,18 @@ $dataProvider->pagination->pageSize = 40;
                         'heading' => '<i class="glyphicon glyphicon-list"></i> Список задач',
                         'before' => '<em>Время завершенных задач за текущий месяц: ' . Task::getDoneTimePerMonth() . '</em>',
                         'after' =>
-//                            BulkButtonWidget::widget([
-//                                'buttons' => Html::a('<i class="glyphicon glyphicon-trash"></i>&nbsp; Удалить выделенное',
-//                                    ["bulkdelete"],
-//                                    [
-//                                        "class" => "btn btn-danger btn-xs",
-//                                        'role' => 'modal-remote-bulk',
-//                                        'data-confirm' => false, 'data-method' => false,// for overide yii data api
-//                                        'data-request-method' => 'post',
-//                                        'data-confirm-title' => 'Are you sure?',
-//                                        'data-confirm-message' => 'Are you sure want to delete this item'
-//                                    ]),
-//                            ]) .
+                            BulkButtonWidget::widget([
+                                'buttons' => Html::a('<i class="glyphicon glyphicon-ruble"></i>&nbsp; Оплачено',
+                                    ["bulk-paid"],
+                                    [
+                                        "class" => "btn btn-primary btn-xs",
+                                        'role' => 'modal-remote-bulk',
+                                        'data-confirm' => false, 'data-method' => false,// for overide yii data api
+                                        'data-request-method' => 'post',
+                                        'data-confirm-title' => 'Уверен?',
+                                        'data-confirm-message' => 'Действительно отметить как "Оплачено"?'
+                                    ]),
+                            ]) .
                             '<div class="clearfix"></div>',
                     ]
                 ]);

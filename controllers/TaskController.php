@@ -64,18 +64,21 @@ class TaskController extends Controller
             }
             return ['output' => $model->$attribute];
         }
+
         $searchModel = new TaskSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
         $dataProvider->setSort([
             'attributes' => [
                 'start',
                 'status',
-                'id'
+                'done_date',
+//                'id'
             ],
             'defaultOrder' => [
                 'start' => SORT_DESC,
                 'status' => SORT_ASC,
-                'id' => SORT_DESC,
+                'done_date' => SORT_DESC,
+//                'id' => SORT_DESC,
             ]
         ]);
 
@@ -303,6 +306,39 @@ class TaskController extends Controller
             return $this->redirect(['index']);
         }
 
+    }
+
+    /**
+     * Выставляет флаг Оплачено, отмеченным задачам
+     * @return array|Response
+     * @throws NotFoundHttpException
+     */
+    public function actionBulkPaid()
+    {
+        $request = Yii::$app->request;
+        $pks = explode(',', $request->post('pks')); // Array or selected records primary keys
+
+        foreach ($pks as $pk) {
+            $model = $this->findModel($pk);
+            $model->paid = 1;
+
+            if (!$model->save()){
+                Yii::error($model->errors, '_error');
+            }
+        }
+
+        if ($request->isAjax) {
+            /*
+            *   Process for ajax request
+            */
+            Yii::$app->response->format = Response::FORMAT_JSON;
+            return ['forceClose' => true, 'forceReload' => '#crud-datatable-pjax'];
+        } else {
+            /*
+            *   Process for non-ajax request
+            */
+            return $this->redirect(['index']);
+        }
     }
 
     /**

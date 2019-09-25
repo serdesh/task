@@ -20,7 +20,8 @@ use yii\widgets\DetailView;
                     }
                 ],
                 'description:ntext',
-                'start',
+//                'start',
+                'done_date:date',
                 'all_time',
                 [
                     'attribute' => 'status',

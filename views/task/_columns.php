@@ -9,10 +9,10 @@ use yii\helpers\Url;
 /* @var $data app\models\Task */
 
 return [
-//    [
-//        'class' => 'kartik\grid\CheckboxColumn',
-//        'width' => '20px',
-//    ],
+    [
+        'class' => 'kartik\grid\CheckboxColumn',
+        'width' => '20px',
+    ],
 //    [
 //        'class' => 'kartik\grid\SerialColumn',
 //        'width' => '30px',
