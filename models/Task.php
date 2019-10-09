@@ -22,6 +22,9 @@ use yii\helpers\ArrayHelper;
  * @property string $end_period Дата завершения периода для отчета
  * @property string $json_text JSON текст
  * @property int $paid Флаг, оплачено (1) или нет (0)
+ * @property array $projects Пректы
+ * @property array $customers Заказчики
+ * @property int $search_all Искать или нет в проектах-исключениях
  *
  * @property Project $project
  */
@@ -35,6 +38,7 @@ class Task extends ActiveRecord
     public $search_all = 0;
     public $projects;
     public $json_text;
+    public $customers;
 
     /**
      * {@inheritdoc}
@@ -51,7 +55,7 @@ class Task extends ActiveRecord
     {
         return [
             [['description', 'notes'], 'string'],
-            [['start', 'all_time', 'projects', 'json_text'], 'safe'],
+            [['start', 'all_time', 'projects', 'json_text', 'customers'], 'safe'],
             [['status', 'project_id', 'search_all', 'paid'], 'integer'],
             [
                 ['project_id'],

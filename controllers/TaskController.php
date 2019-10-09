@@ -322,7 +322,7 @@ class TaskController extends Controller
             $model = $this->findModel($pk);
             $model->paid = 1;
 
-            if (!$model->save()){
+            if (!$model->save()) {
                 Yii::error($model->errors, '_error');
             }
         }
@@ -375,6 +375,7 @@ class TaskController extends Controller
     }
 
     /**
+     * Отмечает время начала выполнения задачи
      * @param int $id ID задачи
      * @return array При удачном выполнении возвращает ['success' => 1], при ошибке ['success' => 0, 'data' => 'Текст ошибки']
      * @throws NotFoundHttpException
@@ -392,7 +393,7 @@ class TaskController extends Controller
 
             $all_time = $model->all_time;
 
-            if ($date_diff) {
+            if (isset($date_diff)) {
 
                 //Добавляем к общему увремени
                 $all_time += (int)$date_diff;
@@ -485,16 +486,21 @@ class TaskController extends Controller
         $dataProvider = new ActiveDataProvider([
             'query' => Task::find()
                 ->joinWith(['project p'])
+                ->joinWith(['boss'])
                 ->andWhere(['task.status' => 1])//Завершенная задача
         ]);
 
         if ($request->isPost) {
             if ($model->load($request->post())) {
+                $start_period = $model->start_period . ' 00:00:00';
+
                 if (!$model->end_period) {
-                    $model->end_period = date('Y-m-d', time());
+                    $end_period = date('Y-m-d 23:59:59', time());
+                } else {
+                    $end_period = $model->end_period . ' 23:59:59';
                 }
                 $dataProvider->query
-                    ->andWhere(['BETWEEN', 'task.done_date', $model->start_period, $model->end_period]);
+                    ->andWhere(['BETWEEN', 'task.done_date', $start_period, $end_period]);
                 if (!$model->search_all) {
                     $dataProvider->query
                         ->andWhere(['p.exclude_statistic' => 0]); //Не исключенные из статистики
@@ -502,6 +508,16 @@ class TaskController extends Controller
                 if (count($model->projects) > 0 && $model->projects != '') {
                     $dataProvider->query
                         ->andWhere(['IN', 'p.id', $model->projects]);
+                }
+//
+                if (count($model->customers) > 0 && $model->customers != '') {
+                    $dataProvider->query
+                        ->andWhere(['IN', 'boss.id', $model->customers]);
+                }
+
+                if ($model->paid == 0) {
+                    $dataProvider->query
+                        ->andWhere(['paid' => 0]); //По умолчанию отображаем только не оплаченные
                 }
             } else {
                 Yii::$app->session->setFlash('error', 'Ошибка загрузки данных модели');

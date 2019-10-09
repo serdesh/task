@@ -1,5 +1,6 @@
 <?php
 
+use app\models\Boss;
 use app\models\Project;
 use app\models\Task;
 use kartik\date\DatePicker;
@@ -26,10 +27,14 @@ CrudAsset::register($this);
 $dataProvider->pagination->pageSize = 40;
 
 if (!$model->start_period) {
-    $model->start_period = '2010-01-01';
+    $model->start_period = '2010-01-01 00:00:00';
+} elseif (!strpos($model->start_period, '00:00:00')){
+    $model->start_period = $model->start_period . ' 00:00:00';
 }
 if (!$model->end_period) {
-    $model->end_period = date('Y-m-d', time());
+    $model->end_period = date('Y-m-d 23:59:59', time());
+} elseif (!strpos($model->end_period, '23:59:59')){
+    $model->end_period = $model->end_period . ' 23:59:59';
 }
 
 $before_text = '<em>Время завершенных задач за период: ' . $model->getAllDoneTime($model->search_all, $model->projects) . '</em>';
@@ -61,6 +66,8 @@ $before_text = '<em>Время завершенных задач за перио
                         'autocomplete' => 'off',
                     ],
                     'pluginOptions' => [
+                        'todayHighlight' => true,
+                        'todayBtn' => true,
                         'startView' => 'months',
                         'format' => 'yyyy-mm-dd',
                         'allowClear' => true,
@@ -74,7 +81,7 @@ $before_text = '<em>Время завершенных задач за перио
 //                    'value' => $post['projects'],
                     'data' => Arrayhelper::map(Project::find()->all(), 'id', 'name'),
                     'size' => Select2::MEDIUM,
-                    'options' => ['placeholder' => 'Проекты', 'multiple' => true],
+                    'options' => ['placeholder' => 'Выберите один или несколько проектов', 'multiple' => true],
                     'pluginOptions' => [
                         'allowClear' => true
                     ],
@@ -83,20 +90,47 @@ $before_text = '<em>Время завершенных задач за перио
 
         </div>
         <div class="row">
-            <div class="col-md-6">
+            <div class="col-md-4">
                 <?= $form->field($model, 'search_all')->widget(SwitchInput::class, [
                     'pluginOptions' => [
-                        'size' => 'large',
+//                        'size' => 'large',
                         'onColor' => 'success',
-                        'offColor' => 'error',
+//                        'offColor' => 'warning',
                         'onText' => 'Поиск по всем проектам',
                         'offText' => 'Не искать в исключениях'
                     ]
                 ])->label(false) ?>
             </div>
-            <div class="col-md-6">
+            <div class="col-md-4">
+                <?= $form->field($model, 'paid')->widget(SwitchInput::class, [
+                    'pluginOptions' => [
+                        'onColor' => 'success',
+//                        'offColor' => 'error',
+                        'onText' => 'Все задачи',
+                        'offText' => 'Не показывать оплаченные'
+                    ]
+                ])->label(false) ?>
+            </div>
+            <div class="col-md-4">
+                <?= $form->field($model, 'customers')->widget(Select2::class, [
+                    'language' => 'ru',
+//                    'value' => $post['projects'],
+                    'data' => Boss::getList(),
+                    'size' => Select2::MEDIUM,
+                    'options' => ['placeholder' => 'Заказчики', 'multiple' => true],
+                    'pluginOptions' => [
+                        'allowClear' => true
+                    ],
+                ])->label(false) ?>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
                 <?= Html::submitButton('Показать',
-                    ['class' => 'btn btn-success btn-block']) ?>
+                    [
+                            'class' => 'btn btn-success btn-block',
+                        'style' => 'margin-bottom: 30px;'
+                    ]) ?>
             </div>
         </div>
         <?php ActiveForm::end(); ?>

@@ -145,6 +145,7 @@ $script = <<<JS
                     id: task_id
                 },
                 function(response) {
+                    console.log(response);
                     if (response['success'] === 1){
                         if (btn.html() === 'Стоп'){
                             btn.html('Старт');
