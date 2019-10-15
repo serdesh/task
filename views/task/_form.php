@@ -15,7 +15,7 @@ use yii\widgets\ActiveForm;
     <?php $form = ActiveForm::begin(); ?>
 
     <?= $form->field($model, 'project_id')->dropDownList(Project::getProjectList(), [
-        'placeholder' => 'Выберите проект.'
+        'prompt' => 'Выберите проект.'
     ]) ?>
 
     <?= $form->field($model, 'description')->textarea(['rows' => 3]) ?>
