@@ -249,4 +249,16 @@ class Task extends ActiveRecord
 
     }
 
+    public function getAllTime($ids)
+    {
+        $sum = 0;
+
+        foreach (self::find()->andWhere(['IN', 'id', $ids])->each() as $model){
+            $sum += (int)$model->all_time;
+        }
+        \Yii::info('Минут - ' . $sum, 'test');
+
+        return $sum;
+    }
+
 }

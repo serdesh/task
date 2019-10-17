@@ -206,10 +206,10 @@ class TaskController extends Controller
             } else {
                 if ($model->load($request->post()) && $model->save()) {
 //                    return $this->redirect('/task/index');
-                return [
-                    'forceReload' => '#crud-datatable-pjax',
-                    'forceClose' => true,
-                ];
+                    return [
+                        'forceReload' => '#crud-datatable-pjax',
+                        'forceClose' => true,
+                    ];
                 } else {
                     return [
                         'title' => "Редактирование задачи #" . $id,
@@ -517,9 +517,10 @@ class TaskController extends Controller
                 Yii::$app->session->setFlash('error', 'Ошибка загрузки данных модели');
                 return $this->redirect('report?search_all=' . $model->search_all);
             }
-
-
         }
+
+
+
         $dataProvider->setSort([
             'defaultOrder' => [
                 'done_date' => SORT_DESC,
@@ -528,6 +529,7 @@ class TaskController extends Controller
         return $this->render('report', [
             'dataProvider' => $dataProvider,
             'model' => $model,
+            'full_time' => Task::formatMinutes($model->getAllTime($dataProvider->getKeys())),
         ]);
     }
 

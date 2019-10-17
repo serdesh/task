@@ -16,6 +16,7 @@ use yii\widgets\ActiveForm;
 /* @var $this yii\web\View */
 /* @var $searchModel app\models\search\TaskSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
+/* @var $full_time string */
 /* @var $model Task */
 
 $this->title = 'Задачи';
@@ -37,7 +38,9 @@ if (!$model->end_period) {
     $model->end_period = $model->end_period . ' 23:59:59';
 }
 
-$before_text = '<em>Время завершенных задач за период: ' . $model->getAllDoneTime($model->search_all, $model->projects) . '</em>';
+
+
+$before_text = '<em>Время завершенных задач за период: ' . $full_time . '</em>';
 
 
 ?>
@@ -166,7 +169,6 @@ $before_text = '<em>Время завершенных задач за перио
                     'panel' => [
                         'type' => 'primary',
                         'heading' => '<i class="glyphicon glyphicon-list"></i> Список задач',
-//                        'before' => '<em>Время завершенных задач за текущий месяц: ' . $sum . '</em>',
                         'before' => $before_text,
                         'after' =>
 //                            BulkButtonWidget::widget([
