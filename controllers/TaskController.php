@@ -526,6 +526,9 @@ class TaskController extends Controller
                 'done_date' => SORT_DESC,
             ]
         ]);
+
+        $dataProvider->pagination = false;
+
         return $this->render('report', [
             'dataProvider' => $dataProvider,
             'model' => $model,

@@ -25,8 +25,6 @@ $post = Yii::$app->request->post();
 
 CrudAsset::register($this);
 
-$dataProvider->pagination->pageSize = 40;
-
 if (!$model->start_period) {
     $model->start_period = '2010-01-01 00:00:00';
 } elseif (!strpos($model->start_period, '00:00:00')){
