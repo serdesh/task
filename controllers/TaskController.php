@@ -81,10 +81,14 @@ class TaskController extends Controller
 //                'id' => SORT_DESC,
             ]
         ]);
+        $dataProvider->pagination = false;
+
+        $task_complete = Task::getDoneTimePerMonth();
 
         return $this->render('index', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
+            'task_complete' => $task_complete,
         ]);
     }
 
@@ -389,7 +393,7 @@ class TaskController extends Controller
 
             if (isset($date_diff)) {
 
-                //Добавляем к общему увремени
+                //Добавляем к общему времени
                 $all_time += (int)$date_diff;
                 $model->all_time = $all_time;
 
@@ -406,16 +410,18 @@ class TaskController extends Controller
                     return ['success' => 0, 'data' => 'Ошибка обнуления старт/стоп'];
                 }
             }
+            $status = 'stopped';
         } else {
             $model->start = date('Y-m-d H:i', time());
             if (!$model->save()) {
                 Yii::error($model->errors, __METHOD__);
                 return ['success' => 0, 'data' => 'Ошибка сохранения старт/стоп'];
             }
+            $status = 'started';
         }
 
         $time = Task::formatMinutes($model->all_time);
-        return ['success' => 1, 'time' => $time];
+        return ['success' => 1, 'time' => $time, 'status' => $status];
     }
 
     /**
@@ -517,9 +523,14 @@ class TaskController extends Controller
                 Yii::$app->session->setFlash('error', 'Ошибка загрузки данных модели');
                 return $this->redirect('report?search_all=' . $model->search_all);
             }
+        } else {
+            $model->start_period = date('Y-m-01', time());
+            $model->end_period = date('Y-m-d', time());
+            $dataProvider->query
+                ->andWhere(['BETWEEN', 'done_date', $model->start_period, $model->end_period])
+                ->andWhere(['paid' => 0])
+                ->andWhere(['p.exclude_statistic' => 0]);
         }
-
-
 
         $dataProvider->setSort([
             'defaultOrder' => [

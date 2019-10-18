@@ -21,20 +21,19 @@ use yii\widgets\ActiveForm;
 
 $this->title = 'Задачи';
 $this->params['breadcrumbs'][] = $this->title;
-$post = Yii::$app->request->post();
 
 CrudAsset::register($this);
 
-if (!$model->start_period) {
-    $model->start_period = '2010-01-01 00:00:00';
-} elseif (!strpos($model->start_period, '00:00:00')){
-    $model->start_period = $model->start_period . ' 00:00:00';
-}
-if (!$model->end_period) {
-    $model->end_period = date('Y-m-d 23:59:59', time());
-} elseif (!strpos($model->end_period, '23:59:59')){
-    $model->end_period = $model->end_period . ' 23:59:59';
-}
+//if (!$model->start_period) {
+//    $model->start_period = '2010-01-01 00:00:00';
+//} elseif (!strpos($model->start_period, '00:00:00')){
+//    $model->start_period = $model->start_period . ' 00:00:00';
+//}
+//if (!$model->end_period) {
+//    $model->end_period = date('Y-m-d 23:59:59', time());
+//} elseif (!strpos($model->end_period, '23:59:59')){
+//    $model->end_period = $model->end_period . ' 23:59:59';
+//}
 
 
 
@@ -94,9 +93,7 @@ $before_text = '<em>Время завершенных задач за перио
             <div class="col-md-4">
                 <?= $form->field($model, 'search_all')->widget(SwitchInput::class, [
                     'pluginOptions' => [
-//                        'size' => 'large',
                         'onColor' => 'success',
-//                        'offColor' => 'warning',
                         'onText' => 'Поиск по всем проектам',
                         'offText' => 'Не искать в исключениях'
                     ]
@@ -106,7 +103,6 @@ $before_text = '<em>Время завершенных задач за перио
                 <?= $form->field($model, 'paid')->widget(SwitchInput::class, [
                     'pluginOptions' => [
                         'onColor' => 'success',
-//                        'offColor' => 'error',
                         'onText' => 'Все задачи',
                         'offText' => 'Не показывать оплаченные'
                     ]
@@ -115,7 +111,6 @@ $before_text = '<em>Время завершенных задач за перио
             <div class="col-md-4">
                 <?= $form->field($model, 'customers')->widget(Select2::class, [
                     'language' => 'ru',
-//                    'value' => $post['projects'],
                     'data' => Boss::getList(),
                     'size' => Select2::MEDIUM,
                     'options' => ['placeholder' => 'Заказчики', 'multiple' => true],
@@ -143,7 +138,6 @@ $before_text = '<em>Время завершенных задач за перио
                 echo GridView::widget([
                     'id' => 'crud-datatable',
                     'dataProvider' => $dataProvider,
-//                    'filterModel' => $searchModel,
                     'pjax' => true,
                     'columns' => require(__DIR__ . '/_report_columns.php'),
                     'toolbar' => [
