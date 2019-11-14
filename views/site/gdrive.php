@@ -1,10 +1,6 @@
 <?php
 
-use app\components\AuthHandler;
-use app\components\MyOAuth2;
-use app\models\User;
 use johnitvn\ajaxcrud\CrudAsset;
-use yii\authclient\OAuth2;
 use yii\bootstrap\Html;
 use yii\bootstrap\Modal;
 use yii\helpers\Url;
@@ -14,6 +10,7 @@ use yii\helpers\VarDumper;
  * @var $error
  * @var $info
  * @var $client
+ * @var $access_token
 all commands https://github.com/creocoder/yii2-flysystem/blob/master/src/Filesystem.php
  */
 CrudAsset::register($this);
@@ -74,6 +71,7 @@ if (isset($info)) {
     Yii::error($e->getTraceAsString(), __METHOD__);
 } ?>
 
+<div class="panel">
 
 <h3>Пример с Google books</h3>
 <?php
@@ -94,14 +92,20 @@ foreach ($results as $item) {
     echo $item['volumeInfo']['title'], "<br />";
 }
 ?>
+</div>
+
 <div class="container">
+    <h3>Токен</h3>
     <div class="row">
-        <div class="col-xs-3">
+        <?php if (!isset($access_token) || !$access_token):?>
+        <div class="col-xs-12">
             <?= Html::a('Получить Token', ['/site/get-token'], ['class' => 'btn btn-info']) ?>
         </div>
-        <div class="col-xs-9">
-            <p><?= isset($access_token) ? VarDumper::dump($access_token, 10, true) : 'Access Token not found' ?></p>
+        <?php else: ?>
+        <div class="col-xs-12">
+            <p><?= $access_token ? VarDumper::dump($access_token, 10, true) : 'Access Token not found' ?></p>
         </div>
+        <?php endif; ?>
     </div>
     <div class="row">
         <div class="col-xs-12">
@@ -113,11 +117,12 @@ foreach ($results as $item) {
         </div>
     </div>
     <div class="row">
+        <h3>Список файлов на диске</h3>
         <div class="col-xs-12">
             <?php
             if (isset($files)) {
                 foreach ($files as $file) {
-                    echo $file->name . '(' . $file->id . ')<br>';
+                    echo 'Имя: ' . $file->name . ' (id:' . $file->id . ')<br>';
 //                        VarDumper::dump($file, 10, true);
                 }
             }

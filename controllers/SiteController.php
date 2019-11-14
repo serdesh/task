@@ -7,6 +7,7 @@ use app\models\Project;
 use app\models\UploadForm;
 use Google_Client;
 use Google_Service_Drive;
+use Google_Service_Drive_DriveFile;
 use yii\httpclient\Client;
 use Yii;
 use yii\bootstrap\Html;
@@ -158,12 +159,35 @@ class SiteController extends Controller
     {
 //        $content = Yii::$app->googleDrive->listContents('', true);
         $content = 'Отключено';
+        $access_token = '';
+        $files = [];
 
-        $client = '';
+        $token_path = Url::to('@app/token.json');
+
+        Yii::info($token_path, 'test');
+
+        if (is_file($token_path)){
+            $access_token = json_decode(file_get_contents($token_path), true);
+        }
+        $client = new Google_Client();
+        $client->setRedirectUri(Url::to('/site/google-drive'));
+        $token = (new Auth())->getToken();
+        Yii::info($token, 'test');
+
+        if ($token){
+            $client->setAccessToken($token);
+            $driveService = new Google_Service_Drive($client);
+            $files = $driveService->files->listFiles(array())->getFiles(); //Получение списка файлов
+//            $files = $driveService->files->listFiles(); //Получение списка файлов
+        }
+
+        Yii::info(json_decode(json_encode($files), true), 'test');
 
         return $this->render('gdrive', [
             'content' => $content,
             'client' => $client,
+            'access_token' => $access_token,
+            'files' => $files,
         ]);
     }
 
@@ -184,12 +208,28 @@ class SiteController extends Controller
 
     /**
      * @return string
+     * @throws \Google_Exception
      */
     public function actionCreateDir()
     {
-        $content = Yii::$app->googleDrive->createDir('Моя2 новая папка');
+        $client = new Google_Client();
+        $client->setAuthConfig(Url::to('@app/credentials.json'));
+        $client->addScope(Google_Service_Drive::DRIVE);
+        $redirect_uri = 'http://localhost/site/get-token';
+        $client->setRedirectUri($redirect_uri);
+        $client->setAccessToken((new Auth())->getToken());
+
+        $service = new Google_Service_Drive($client);
+        $files = $service->files->listFiles(array())->getFiles(); //Получение списка файлов
+
+        $file = new Google_Service_Drive_DriveFile();
+
+        $file->name = "New File By Desh";
+        // To create new folder
+        $file->setMimeType('application/vnd.google-apps.folder');
+
         return $this->render('gdrive', [
-            'content' => $content,
+            'files' => $files
         ]);
     }
 
@@ -300,11 +340,15 @@ class SiteController extends Controller
     /**
      * @return string
      * @throws \Google_Exception
+     * @throws \yii\base\InvalidConfigException
+     * @throws \yii\httpclient\Exception
      */
     public function actionGetToken()
     {
         $request = Yii::$app->request;
-        $auth_code = $request->get('code');
+        $auth_code = $request->get('code') ?? null;
+
+
 
         //https://accounts.google.com/o/oauth2/auth?response_type=code&redirect_uri=http%3A%2F%2Flocalhost%2Fsite%2Fget-token&client_id=667521552878-91u8dlqf19tgnbfhulohjmg3jmngvosg.apps.googleusercontent.com&scope=https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fdrive.file&access_type=offline&approval_prompt=auto
 
@@ -321,6 +365,7 @@ class SiteController extends Controller
         if (file_exists($token_path)) {
             //Если есть файл токен доступа
             $access_token = Json::decode(file_get_contents($token_path));
+            Yii::info($access_token, 'test');
             $client->setAccessToken($access_token);
         } elseif ($auth_code) {
             //Если есть код доступа
@@ -354,11 +399,20 @@ class SiteController extends Controller
 
                 $this->redirect('https://accounts.google.com/o/oauth2/auth?' . $get_data);
 
-                $guzzle_client = new Client();
-                $response = $guzzle_client->request('GET', 'https://accounts.google.com/o/oauth2/auth?',
-                    $data)->getBody();
-
-                Yii::info($response, 'test');
+                $client = new Client();
+                $response = $client->createRequest()
+                    ->setMethod('GET')
+                    ->setUrl('https://accounts.google.com/o/oauth2/auth?')
+                    ->setData($data)
+                    ->send();
+                if ($response->isOk) {
+                    Yii::info($response, 'test');
+                }
+//                $guzzle_client = new Client();
+//                $response = $guzzle_client->request('GET', 'https://accounts.google.com/o/oauth2/auth?',
+//                    $data)->getBody();
+//
+//                Yii::info($response, 'test');
 
 //                Открываем страницу с аутентификацией
                 return $this->render('gdrive', [
@@ -445,7 +499,6 @@ class SiteController extends Controller
 
         return $this->render('gdrive');
     }
-
 
     /**
      * Backup DataBase and directories (settings in config/web.php [backup])

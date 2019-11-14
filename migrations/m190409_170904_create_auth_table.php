@@ -27,11 +27,17 @@ class m190409_170904_create_auth_table extends Migration
         $this->createTable('{{%auth}}', [
             'id' => $this->primaryKey(),
             'user_id' => $this->integer()->notNull(),
-            'source' => $this->string()->notNull(),
-            'source_id' => $this->string()->notNull(),
+            'source' => $this->string()->comment('Наименование ресурса'),
         ]);
 
-        $this->addForeignKey('fk-auth-user_id-user-id', 'auth', 'user_id', 'user', 'id', 'CASCADE', 'CASCADE');
+        $this->addForeignKey(
+            'fk-auth-user_id-user-id',
+            'auth',
+            'user_id',
+            'user',
+            'id',
+            'CASCADE',
+            'CASCADE');
     }
 
     /**
