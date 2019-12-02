@@ -10,6 +10,7 @@
 
 namespace app\modules\drive\models;
 
+use app\models\Auth;
 use Exception;
 use Google_Client;
 use Google_Exception;
@@ -72,7 +73,7 @@ class Drive
                 $client->setState(null);
                 $client->setPrompt(null);
                 $client->setApprovalPrompt('null');
-                $accessToken = $client->fetchAccessTokenWithRefreshToken('1/X2W97R6HWFgCpR9_xmVPTCFWQZhLgwyiTRMCbBqWy-w');
+                $accessToken = $client->fetchAccessTokenWithRefreshToken(Auth::getGoogleRefreshToken());
                 $authUrl = $client->createAuthUrl();
 
 //                printf("Open the following link in your browser:\n%s\n", $authUrl);

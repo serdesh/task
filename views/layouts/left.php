@@ -82,6 +82,7 @@
                                 ['label' => 'Отправка почты', 'icon' => 'envelope', 'url' => ['/site/contact']],
                                 ['label' => 'Прием почты', 'icon' => 'envelope', 'url' => ['/site/mail']],
                                 ['label' => 'Загрузка файлов', 'icon' => 'download', 'url' => ['/site/upload-files']],
+                                ['label' => 'Парсер', 'icon' => 'download', 'url' => ['/site/parse']],
                             ],
                         ],
                         ['label' => 'Gii', 'icon' => 'user-o', 'url' => ['/gii']],

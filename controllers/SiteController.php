@@ -3,11 +3,14 @@
 namespace app\controllers;
 
 use app\models\Auth;
+use app\models\Parsing;
 use app\models\Project;
 use app\models\UploadForm;
+use app\modules\drive\models\Google;
 use Google_Client;
 use Google_Service_Drive;
 use Google_Service_Drive_DriveFile;
+use yii\helpers\VarDumper;
 use yii\httpclient\Client;
 use Yii;
 use yii\bootstrap\Html;
@@ -154,38 +157,20 @@ class SiteController extends Controller
 
     /**
      * @return string
+     * @throws \Google_Exception
      */
     public function actionGoogleDrive()
     {
-//        $content = Yii::$app->googleDrive->listContents('', true);
         $content = 'Отключено';
         $access_token = '';
-        $files = [];
 
-        $token_path = Url::to('@app/token.json');
+        $google = new Google();
+        $driveService = $google->getGoogleDriveService();
 
-        Yii::info($token_path, 'test');
-
-        if (is_file($token_path)){
-            $access_token = json_decode(file_get_contents($token_path), true);
-        }
-        $client = new Google_Client();
-        $client->setRedirectUri(Url::to('/site/google-drive'));
-        $token = (new Auth())->getToken();
-        Yii::info($token, 'test');
-
-        if ($token){
-            $client->setAccessToken($token);
-            $driveService = new Google_Service_Drive($client);
-            $files = $driveService->files->listFiles(array())->getFiles(); //Получение списка файлов
-//            $files = $driveService->files->listFiles(); //Получение списка файлов
-        }
-
-        Yii::info(json_decode(json_encode($files), true), 'test');
+        $files = $driveService->files->listFiles(array())->getFiles(); //Получение списка файлов
 
         return $this->render('gdrive', [
             'content' => $content,
-            'client' => $client,
             'access_token' => $access_token,
             'files' => $files,
         ]);
@@ -347,7 +332,6 @@ class SiteController extends Controller
     {
         $request = Yii::$app->request;
         $auth_code = $request->get('code') ?? null;
-
 
 
         //https://accounts.google.com/o/oauth2/auth?response_type=code&redirect_uri=http%3A%2F%2Flocalhost%2Fsite%2Fget-token&client_id=667521552878-91u8dlqf19tgnbfhulohjmg3jmngvosg.apps.googleusercontent.com&scope=https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fdrive.file&access_type=offline&approval_prompt=auto
@@ -660,12 +644,12 @@ class SiteController extends Controller
         $project_model = new Project();
         $files = '';
 
-        if ($request->isPost){
+        if ($request->isPost) {
             Yii::info('Is Post', 'test');
 
             $model->files = UploadedFile::getInstances($model, 'files');
-            if ($model->upload()){
-              $files = $model->files;
+            if ($model->upload()) {
+                $files = $model->files;
             } else {
                 $files = $model->errors;
             }
@@ -676,5 +660,126 @@ class SiteController extends Controller
             'project' => $project_model,
             'files' => $files
         ]);
+    }
+
+    /**
+     * @return string
+     * @throws \Google_Exception
+     */
+    public function actionUploadBigFile()
+    {
+        $request = Yii::$app->request;
+        $model = new UploadForm();
+        $project_model = new Project();
+        $files = '';
+
+        if ($request->isPost) {
+            $model->files = json_decode(json_encode(UploadedFile::getInstances($model, 'files')), true);
+
+            Yii::info($model->files, 'test');
+
+            $file_info = json_decode(json_encode($model->files), true)[0];
+
+            //Получаем ссылку на загрузку файла
+
+            $source = Url::to($file_info['tempName']);
+//            Yii::info($source, 'test');
+
+            $url = 'https://www.googleapis.com/upload/drive/v3/files?uploadType=resumable';
+
+            $token = Auth::clientInit()->getAccessToken()['access_token'];
+            Yii::info($token, 'test');
+
+            $post = [
+                'name' => $file_info['name'],
+                'parents' => ['1R3MLqr447N4rKmcHxl2P9eXcws4yFhPC']
+            ];
+
+            $auth_headers = [
+                "Authorization: Bearer " . $token,
+                "Content-Type: application/json; charset=UTF-8",
+                "X-Upload-Content-Type: " . $file_info['type'],
+                "X-Upload-Content-Length: " . $file_info['size']
+            ];
+
+            $ch = curl_init();
+            curl_setopt($ch, CURLOPT_URL, $url);
+            curl_setopt($ch, CURLOPT_POST, 1);
+            curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($post));
+            curl_setopt($ch, CURLOPT_HTTPHEADER, $auth_headers);
+            curl_setopt($ch, CURLOPT_HEADER, 1);
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+
+            $response = curl_exec($ch);
+            $error = curl_error($ch);
+            $info = curl_getinfo($ch);
+            curl_close($ch);
+
+            Yii::info($info, 'test');
+            Yii::info($response, 'test');
+            Yii::info($error, 'test');
+
+            $header = explode("\n", $response);
+            $location = '';
+
+            foreach ($header as $string) {
+                if (strpos($string, 'Location: ') !== false) {
+                    $location = str_replace('Location: ', '', $string);
+                    $location = trim($location);
+                    break;
+                }
+            }
+
+            //Отправляем файл
+            $upload_headers = [
+                "Authorization: Bearer " . $token,
+                'Content-Length: ' . $file_info['size'],
+                'Content-Type: ' . $file_info['type'],
+            ];
+
+            $file = fopen($source, "rb");
+            $ch = curl_init();
+            curl_setopt($ch, CURLOPT_URL, $location);
+            curl_setopt($ch, CURLOPT_HTTPHEADER, $upload_headers);
+            curl_setopt($ch, CURLOPT_HEADER, 1);
+
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+            curl_setopt($ch, CURLOPT_PUT, 1);
+            curl_setopt($ch, CURLOPT_INFILE, $file);
+            curl_setopt($ch, CURLOPT_INFILESIZE,$file_info['size']);
+
+            curl_setopt($ch, CURLINFO_HEADER_OUT, true);
+//            curl_setopt($ch, CURLOPT_TIMEOUT, 20);
+
+            $response = curl_exec($ch);
+            $error = curl_error($ch);
+            $info = curl_getinfo($ch);
+
+            curl_close($ch);
+            fclose($file);
+
+            Yii::info('Результат загрузки', 'test');
+            Yii::info($info, 'test');
+            Yii::info($response, 'test');
+            Yii::info($error, 'test');
+        }
+
+        return $this->render('upload_files', [
+            'model' => $model,
+            'project' => $project_model,
+            'files' => $files
+        ]);
+    }
+
+    public function actionParse()
+    {
+        $parsing = new Parsing();
+        $parsing->url = 'http://perfumerylab.ru/sinteticheskie-molekuly-i-bazy/';
+
+        $result = $parsing->parse();
+
+//        echo $result;
+        VarDumper::dump($result, 20, true);
+//        var_dump($result[0]);
     }
 }

@@ -6,6 +6,12 @@ use Yii;
 use yii\base\Model;
 use yii\web\UploadedFile;
 
+/**
+ * @var array $file
+ * @var array $files
+ * @var string $token
+ */
+
 class UploadForm extends Model
 {
     public $file;
@@ -22,14 +28,14 @@ class UploadForm extends Model
                 ['file'],
                 'file',
                 'skipOnEmpty' => true,
-                'extensions' => 'txt, ods, png, jpg, gif, sql, pdf, xls, xlsx, doc, docx, json'
+                'extensions' => 'txt, ods, png, jpg, gif, sql, pdf, xls, xlsx, doc, docx, json, tar'
             ],
             [
                 ['files'],
                 'file',
                 'skipOnEmpty' => true,
                 'maxFiles' => 5,
-                'extensions' => 'txt, ods, png, jpg, gif, sql, pdf, xls, xlsx, doc, docx, json'
+                'extensions' => 'txt, ods, png, jpg, gif, sql, pdf, xls, xlsx, doc, docx, json, tar'
             ],
         ];
     }

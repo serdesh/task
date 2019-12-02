@@ -4,6 +4,7 @@ use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 
 /** @var string $files */
+/** @var \app\models\Project $project */
 ?>
 
 
@@ -17,6 +18,7 @@ use yii\widgets\ActiveForm;
     <?php // echo $form->field($model, 'file')->fileInput()->label('Загрузить файл') ?>
 
     <?= $form->field($model, 'files[]')->fileInput(['multiple' => true])->label('Загрузить несколько файлов') ?>
+
     <?= $form->field($project, 'name')->textInput()->label('Проект') ?>
 
     <?= Html::button('Загрузить', ['type' => 'submit', 'class' => 'btn btn-info']) ?>
