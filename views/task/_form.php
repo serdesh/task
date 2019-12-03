@@ -14,9 +14,16 @@ use yii\widgets\ActiveForm;
 
     <?php $form = ActiveForm::begin(); ?>
 
-    <?= $form->field($model, 'project_id')->dropDownList(Project::getProjectList(), [
-        'prompt' => 'Выберите проект.'
-    ]) ?>
+    <div class="row">
+        <div class="col-md-8">
+            <?= $form->field($model, 'project_id')->dropDownList(Project::getProjectList(), [
+                'prompt' => 'Выберите проект.'
+            ]) ?>
+        </div>
+        <div class="col-md-4">
+            <?= $form->field($model, 'agreed_price')->textInput() ?>
+        </div>
+    </div>
 
     <?= $form->field($model, 'description')->textarea(['rows' => 3]) ?>
 

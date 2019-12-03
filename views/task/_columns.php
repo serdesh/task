@@ -119,6 +119,17 @@ return [
         'format' => 'nText',
     ],
     [
+        'class' => '\kartik\grid\DataColumn',
+        'attribute' => 'agreed_price',
+        'label' => 'ФС',
+        'value' => function (Task $model) {
+            if ($model->agreed_price > 0){
+                return 'Да';
+            }
+            return 'Нет';
+        },
+    ],
+    [
         'class' => 'kartik\grid\ActionColumn',
         'dropdown' => false,
         'vAlign' => 'middle',
