@@ -26,6 +26,7 @@ use yii\helpers\ArrayHelper;
  * @property array $customers Заказчики
  * @property int $search_all Искать или нет в проектах-исключениях
  * @property double $agreed_price Согласованная сумма для оплата
+ * @property int $plan_time Планируемое время
  *
  * @property Project $project
  */
@@ -57,7 +58,7 @@ class Task extends ActiveRecord
         return [
             [['description', 'notes'], 'string'],
             [['start', 'all_time', 'projects', 'json_text', 'customers'], 'safe'],
-            [['status', 'project_id', 'search_all', 'paid'], 'integer'],
+            [['status', 'project_id', 'search_all', 'paid', 'plan_time'], 'integer'],
             [
                 ['project_id'],
                 'exist',
@@ -89,7 +90,8 @@ class Task extends ActiveRecord
             'projects' => 'Проект',
             'json_text' => 'JSON текст',
             'paid' => 'Оплачено',
-            'agreed_price' => 'Фикс. сумма',
+            'agreed_price' => 'Фикс. сумма задачи',
+            'plan_time' => 'Время план.',
         ];
     }
 

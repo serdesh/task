@@ -28,10 +28,13 @@ use yii\widgets\ActiveForm;
     <?= $form->field($model, 'description')->textarea(['rows' => 3]) ?>
 
     <div class="row">
-        <div class="col-md-6">
+        <div class="col-md-4">
             <?= $form->field($model, 'all_time')->textInput(['maxlength' => true]) ?>
         </div>
-        <div class="col-md-6">
+        <div class="col-md-4">
+            <?= $form->field($model, 'plan_time')->textInput(['maxlength' => true]) ?>
+        </div>
+        <div class="col-md-4">
             <?= $form->field($model, 'status')->dropDownList(Task::getStatusList()) ?>
         </div>
     </div>
