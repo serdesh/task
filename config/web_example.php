@@ -42,8 +42,8 @@ $config = [
             'clients' => [
                 'google' => [
                     'class' => 'yii\authclient\clients\Google',
-                    'clientId' => '667521552878-91u8dlqf19tgnbfhulohjmg3jmngvosg.apps.googleusercontent.com',
-                    'clientSecret' => 'QmYeNv5dHMAgVADUdterUrpb',
+                    'clientId' => '667521552878-91u8d3422fsslqf19tgnbfhulohjmg3jmngvosg.apps.googleusercontent.com',
+                    'clientSecret' => 'Q3342mYeNv5dHMAgVfwd3ADUdte3edrUrpb',
                     'returnUrl' => 'http://localhost/drive',
                 ],
                 'facebook' => [
@@ -56,10 +56,10 @@ $config = [
         ],
         'googleDrive' => [
             'class' => 'lhs\Yii2FlysystemGoogleDrive\GoogleDriveFilesystem',
-            'clientId' => '667521552878-91u8dlqf19tgnbfhulohjmg3jmngvosg.apps.googleusercontent.com',
-            'clientSecret' => 'QmYeNv5dHMAgVADUdterUrpb',
-            'refreshToken' => '1/bVn_hdjxQ3CVTsXtNyQyBcEgpvAZPGxRAXikYT4GMZYH4kvl20bt_-QaK1xh3CCw',
-            'rootFolderId' => '1dDERhuGybkoHHsBswt4EbXeLVHlZe9fT',
+            'clientId' => '66752155287dewevvsw8-91u8dlqf19tgnbfhulohjmg3jmngvosg.apps.googleusercontent.com',
+            'clientSecret' => 'QmYeNwer44v5dHgte3MAgVADUwervcdterUrpb',
+            'refreshToken' => '1/bVn_hdjxQ3CVTsXtN3434gyQyBcEgpv334534gAZPGxRAXikYT4GMZYH4kvl20bt_-QaK1xh3CCw',
+            'rootFolderId' => '1dDERhuGyb34g34koHHsBswt4Eb3453gg34gXeLVHlZe9fT',
         ],
         'backup' => [
             'class' => 'demi\backup\Component',

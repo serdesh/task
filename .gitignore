@@ -37,3 +37,4 @@ config/db.php
 /web/uploads/*
 /credentials.json
 /token.json
+/config/web.php
