@@ -24,19 +24,6 @@ $this->params['breadcrumbs'][] = $this->title;
 
 CrudAsset::register($this);
 
-//if (!$model->start_period) {
-//    $model->start_period = '2010-01-01 00:00:00';
-//} elseif (!strpos($model->start_period, '00:00:00')){
-//    $model->start_period = $model->start_period . ' 00:00:00';
-//}
-//if (!$model->end_period) {
-//    $model->end_period = date('Y-m-d 23:59:59', time());
-//} elseif (!strpos($model->end_period, '23:59:59')){
-//    $model->end_period = $model->end_period . ' 23:59:59';
-//}
-
-
-
 $before_text = '<em>Время завершенных задач за период: ' . $full_time . '</em>';
 
 

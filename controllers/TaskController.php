@@ -363,6 +363,9 @@ class TaskController extends Controller
     {
         $model = new Task();
         $model->status = Task::TASK_STATUS_IN_WORK;
+        $model->project_id = $model->getLastProjectId();
+
+        Yii::info($model->attributes, 'test');
         if (!$model->save()) {
             Yii::error($model->errors, __METHOD__);
             Yii::$app->session->setFlash('error', 'Ошибка добавления');
@@ -505,14 +508,18 @@ class TaskController extends Controller
                     $dataProvider->query
                         ->andWhere(['p.exclude_statistic' => 0]); //Не исключенные из статистики
                 }
-                if (count($model->projects) > 0 && $model->projects != '') {
-                    $dataProvider->query
-                        ->andWhere(['IN', 'p.id', $model->projects]);
+                if ($model->projects) {
+                    if (count($model->projects) > 0 && $model->projects != '') {
+                        $dataProvider->query
+                            ->andWhere(['IN', 'p.id', $model->projects]);
+                    }
                 }
-//
-                if (count($model->customers) > 0 && $model->customers != '') {
-                    $dataProvider->query
-                        ->andWhere(['IN', 'boss.id', $model->customers]);
+
+                if ($model->customers) {
+                    if (count($model->customers) > 0 && $model->customers != '') {
+                        $dataProvider->query
+                            ->andWhere(['IN', 'boss.id', $model->customers]);
+                    }
                 }
 
                 if ($model->paid == 0) {

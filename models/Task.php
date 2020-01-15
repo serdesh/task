@@ -221,7 +221,7 @@ class Task extends ActiveRecord
         if ($hour == 0) {
             return $min . ' мин.';
         } else {
-            return $hour . ' ч. ' . $min . ' мин.';
+            return $hour . ' ч. ' . $min . ' мин. ('. $all_min . ' мин.)';
         }
 
     }
@@ -266,4 +266,8 @@ class Task extends ActiveRecord
         return $sum;
     }
 
+    public function getLastProjectId()
+    {
+        return Task::find()->orderBy(['id' => SORT_DESC])->one()->project_id;
+    }
 }
