@@ -121,12 +121,13 @@ return [
     [
         'class' => '\kartik\grid\DataColumn',
         'attribute' => 'agreed_price',
+//        'filter' => [1 => 'Да', 0 => 'Нет'],
         'label' => 'ФС',
         'value' => function (Task $model) {
             if ($model->agreed_price > 0){
                 return 'Да';
             }
-            return 'Нет';
+            return ' ';
         },
     ],
     [

@@ -363,7 +363,7 @@ class TaskController extends Controller
     {
         $model = new Task();
         $model->status = Task::TASK_STATUS_IN_WORK;
-        $model->project_id = $model->getLastProjectId();
+//        $model->project_id = $model->getLastProjectId();
 
         Yii::info($model->attributes, 'test');
         if (!$model->save()) {
@@ -481,6 +481,10 @@ class TaskController extends Controller
         return ['success', $project_name];
     }
 
+    /**
+     * Генерация отчета
+     * @return string|Response
+     */
     public function actionReport()
     {
         $request = Yii::$app->request;
@@ -526,6 +530,11 @@ class TaskController extends Controller
                     $dataProvider->query
                         ->andWhere(['paid' => 0]); //По умолчанию отображаем только не оплаченные
                 }
+
+                if ($model->parented == 0){
+                    $dataProvider->query
+                        ->andWhere(['<>', 'parent_task_id', null]);
+                }
             } else {
                 Yii::$app->session->setFlash('error', 'Ошибка загрузки данных модели');
                 return $this->redirect('report?search_all=' . $model->search_all);
@@ -554,6 +563,10 @@ class TaskController extends Controller
         ]);
     }
 
+    /**
+     * JSON декодер
+     * @return string
+     */
     public function actionDecoder()
     {
         $request = Yii::$app->request;

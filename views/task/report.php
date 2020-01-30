@@ -31,7 +31,7 @@ $before_text = '<em>Время завершенных задач за перио
     <div class="task-report-form">
         <?php $form = ActiveForm::begin(); ?>
         <div class="row filter-report">
-                <div class="col-md-3">
+            <div class="col-md-3">
                 <?= $form->field($model, 'start_period')->widget(DatePicker::class, [
                     'type' => DatePicker::TYPE_COMPONENT_APPEND,
                     'options' => [
@@ -108,10 +108,21 @@ $before_text = '<em>Время завершенных задач за перио
             </div>
         </div>
         <div class="row">
-            <div class="col-md-12">
+            <div class="col-md-4">
+                <?= $form->field($model, 'parented')->widget(SwitchInput::class, [
+//                        'options'
+                    'pluginOptions' => [
+//                        'handleWidth'=>150,
+                        'onColor' => 'success',
+                        'onText' => 'Все задачи',
+                        'offText' => 'Только основные'
+                    ]
+                ])->label(false) ?>
+            </div>
+            <div class="col-md-8">
                 <?= Html::submitButton('Показать',
                     [
-                            'class' => 'btn btn-success btn-block',
+                        'class' => 'btn btn-success btn-block',
                         'style' => 'margin-bottom: 30px;'
                     ]) ?>
             </div>

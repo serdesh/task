@@ -39,6 +39,13 @@ use yii\widgets\ActiveForm;
         </div>
     </div>
 
+    <div class="row">
+        <div class="col-md-12">
+            <?= $form->field($model, 'parent_task_id')->dropDownList($model->getTasks(), [
+                'prompt' => 'Выберите задачу...'
+            ]) ?>
+        </div>
+    </div>
 
     <?= $form->field($model, 'notes')->textarea(['rows' => 3]) ?>
 

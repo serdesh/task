@@ -30,6 +30,13 @@ use yii\widgets\DetailView;
                     }
                 ],
                 'notes:ntext',
+                'paid',
+                'agreed_price',
+                'plan_time',
+                [
+                    'attribute' => 'parent_task_id',
+                    'value' => $model->parentTask->description ?? null,
+                ],
             ],
         ]);
     } catch (Exception $e) {

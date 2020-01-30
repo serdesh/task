@@ -14,7 +14,7 @@ use yii\helpers\ArrayHelper;
  * @property string $description
  * @property string $start Начало выполнения (текущий период)
  * @property string $all_time Общее время выполнения
- * @property int $status Завершено/В работе
+ * @property int $status Завершено = 1/В работе = 0
  * @property string $notes заметки
  * @property int $project_id ID проекта
  * @property string $done_date Дата завершения задачи
@@ -27,8 +27,10 @@ use yii\helpers\ArrayHelper;
  * @property int $search_all Искать или нет в проектах-исключениях
  * @property double $agreed_price Согласованная сумма для оплата
  * @property int $plan_time Планируемое время
+ * @property int $parent_task_id Родительская задача
  *
  * @property Project $project
+ * @property Task $parentTask
  */
 class Task extends ActiveRecord
 {
@@ -41,6 +43,7 @@ class Task extends ActiveRecord
     public $projects;
     public $json_text;
     public $customers;
+    public $parented;
 
     /**
      * {@inheritdoc}
@@ -57,8 +60,8 @@ class Task extends ActiveRecord
     {
         return [
             [['description', 'notes'], 'string'],
-            [['start', 'all_time', 'projects', 'json_text', 'customers'], 'safe'],
-            [['status', 'project_id', 'search_all', 'paid', 'plan_time'], 'integer'],
+            [['start', 'all_time', 'projects', 'json_text', 'customers', 'parented'], 'safe'],
+            [['status', 'project_id', 'search_all', 'paid', 'plan_time', 'parent_task_id'], 'integer'],
             [
                 ['project_id'],
                 'exist',
@@ -92,6 +95,7 @@ class Task extends ActiveRecord
             'paid' => 'Оплачено',
             'agreed_price' => 'Фикс. сумма задачи',
             'plan_time' => 'Время план.',
+            'parent_task_id' => 'Родительская задача',
         ];
     }
 
@@ -221,7 +225,7 @@ class Task extends ActiveRecord
         if ($hour == 0) {
             return $min . ' мин.';
         } else {
-            return $hour . ' ч. ' . $min . ' мин. ('. $all_min . ' мин.)';
+            return $hour . ' ч. ' . $min . ' мин. (' . $all_min . ' мин.)';
         }
 
     }
@@ -244,7 +248,7 @@ class Task extends ActiveRecord
             $query->andWhere(['p.exclude_statistic' => 0]);
         }
 
-        if ($projects){
+        if ($projects) {
             $query->andWhere(['IN', 'p.id', $projects]);
         }
         $minutes = $query
@@ -254,11 +258,16 @@ class Task extends ActiveRecord
 
     }
 
+    /**
+     * Получает общее время выбранных задач
+     * @param array $ids Идентификаторы задач
+     * @return int
+     */
     public function getAllTime($ids)
     {
         $sum = 0;
 
-        foreach (self::find()->andWhere(['IN', 'id', $ids])->each() as $model){
+        foreach (self::find()->andWhere(['IN', 'id', $ids])->each() as $model) {
             $sum += (int)$model->all_time;
         }
         \Yii::info('Минут - ' . $sum, 'test');
@@ -266,8 +275,43 @@ class Task extends ActiveRecord
         return $sum;
     }
 
+    /**
+     * Получает Идентификатор проекта последней добавленой задачи
+     * @return int
+     */
     public function getLastProjectId()
     {
         return Task::find()->orderBy(['id' => SORT_DESC])->one()->project_id;
+    }
+
+    public function getParentTask()
+    {
+        return $this->hasOne(Task::class, ['id' => 'parent_task_id']);
+    }
+
+    /**
+     * Получает задачи для привязки.
+     * Условия отбора:
+     *  - Не оплачено
+     *  - В работе
+     *  - Тот же проект что и у текущей задачи
+     *  - Нет родительской задачи
+     *  - Не текущая задача (исключаем привязку задачи самой к себе)
+     *
+     * @return array
+     */
+    public function getTasks()
+    {
+        $query = Task::find()
+            ->andWhere([
+                'paid' => 0,
+                'status' => self::TASK_STATUS_IN_WORK,
+                'project_id' => $this->project_id,
+                'parent_task_id' => null,
+            ])
+            ->andWhere(['<>', 'id', $this->id]);
+
+        return ArrayHelper::map($query->all(), 'id', 'description');
+
     }
 }
