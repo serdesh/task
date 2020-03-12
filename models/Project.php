@@ -95,7 +95,7 @@ class Project extends ActiveRecord
      */
     public static function getProjectList()
     {
-        $projects = self::find()->all();
+        $projects = self::find()->orderBy('name')->all();
 
         return ArrayHelper::map($projects, 'id', 'name');
     }

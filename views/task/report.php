@@ -66,7 +66,7 @@ $before_text = '<em>Время завершенных задач за перио
                 <?= $form->field($model, 'projects')->widget(Select2::class, [
                     'language' => 'ru',
 //                    'value' => $post['projects'],
-                    'data' => Arrayhelper::map(Project::find()->all(), 'id', 'name'),
+                    'data' => Project::getProjectList(),
                     'size' => Select2::MEDIUM,
                     'options' => ['placeholder' => 'Выберите один или несколько проектов', 'multiple' => true],
                     'pluginOptions' => [

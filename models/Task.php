@@ -28,6 +28,7 @@ use yii\helpers\ArrayHelper;
  * @property double $agreed_price Согласованная сумма для оплата
  * @property int $plan_time Планируемое время
  * @property int $parent_task_id Родительская задача
+ * @property int $parented Флаг, показывать (1) или нет (0) только родительские задачи
  *
  * @property Project $project
  * @property Task $parentTask
@@ -313,5 +314,23 @@ class Task extends ActiveRecord
 
         return ArrayHelper::map($query->all(), 'id', 'description');
 
+    }
+
+
+    /**
+     * Получает общее время задачи, включая дочерние задачи
+     * @param int $id Идентификатор задачи
+     * @return int
+     */
+    public function getTotalTimeForTask($id)
+    {
+        $sum = 0;
+
+        foreach (self::find()->andWhere(['OR', ['id' => $id], ['parent_task_id' => $id]])->each() as $model) {
+            $sum += (int)$model->all_time;
+        }
+        \Yii::info('Минут - ' . $sum, 'test');
+
+        return $sum;
     }
 }

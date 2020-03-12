@@ -70,23 +70,28 @@ return [
         'hAlign' => 'center',
         'vAlign' => 'middle',
     ],
+
     [
-        'class' => '\kartik\grid\DataColumn',
-        'attribute' => 'status',
-        'value' => function ($data) {
-            if (!$data->status) {
-                return Html::activeDropDownList($data, 'status', Task::getStatusList(), [
-                    'id' => 'statuses-dropdown',
-                    'data-id' => $data->id,
-                    'style' => 'width: 100%; border-radius: 4px; padding: 5px;'
-                ]);
-            }
-            return Task::getStatusName($data->status);
-        },
-        'format' => 'raw',
-        'vAlign' => 'middle',
-        'width' => '110px',
-    ],
+        'attribute' => 'agreed_price'
+    ]
+
+//    [
+//        'class' => '\kartik\grid\DataColumn',
+//        'attribute' => 'status',
+//        'value' => function ($data) {
+//            if (!$data->status) {
+//                return Html::activeDropDownList($data, 'status', Task::getStatusList(), [
+//                    'id' => 'statuses-dropdown',
+//                    'data-id' => $data->id,
+//                    'style' => 'width: 100%; border-radius: 4px; padding: 5px;'
+//                ]);
+//            }
+//            return Task::getStatusName($data->status);
+//        },
+//        'format' => 'raw',
+//        'vAlign' => 'middle',
+//        'width' => '110px',
+//    ],
 //    [
 //        'class' => 'kartik\grid\ActionColumn',
 //        'dropdown' => false,

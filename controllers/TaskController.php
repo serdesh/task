@@ -533,7 +533,7 @@ class TaskController extends Controller
 
                 if ($model->parented == 0){
                     $dataProvider->query
-                        ->andWhere(['<>', 'parent_task_id', null]);
+                        ->andWhere(['IS', 'parent_task_id', null]);
                 }
             } else {
                 Yii::$app->session->setFlash('error', 'Ошибка загрузки данных модели');

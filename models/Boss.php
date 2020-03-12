@@ -82,7 +82,7 @@ class Boss extends ActiveRecord
 
     public static function getList()
     {
-       $bosses = self::find()->all();
+       $bosses = self::find()->orderBy(['name' => SORT_ASC])->all();
 
        return ArrayHelper::map($bosses, 'id', 'name');
     }
