@@ -91,12 +91,12 @@ return [
         'value' => function (Task $data) {
             if (!$data->status) {
                 if ($data->start) {
-                    return Html::a('Стоп', ['#'], [
+                    return Html::button('Стоп', [
                         'class' => 'btn btn-danger start-btn',
                         'data-id' => $data->id,
                     ]);
                 }
-                return Html::a('Старт', ['#'], [
+                return Html::button('Старт', [
                     'class' => 'btn btn-success start-btn',
                     'data-id' => $data->id,
                 ]);
