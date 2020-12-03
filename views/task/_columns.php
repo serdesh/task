@@ -125,7 +125,7 @@ return [
         'label' => 'ФС',
         'value' => function (Task $model) {
             if ($model->agreed_price > 0){
-                return 'Да';
+                return $model->agreed_price;
             }
             return ' ';
         },
