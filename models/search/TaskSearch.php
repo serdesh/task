@@ -48,6 +48,7 @@ class TaskSearch extends Task
         if (!$params) {
             $query->andWhere(['paid' => 0]);
         }
+        \Yii::info($params, 'test');
 
         $this->load($params);
 

@@ -95,8 +95,7 @@ $script = <<<JS
         $(document).on('change', '#statuses-dropdown', function(event){
             var select = $(event.target);
             var selected_value = select.val();
-            // var url =  "/task/set-status";
-            var url =  "?r=/task/set-status";
+            var url =  "/task/set-status";
             var id = select.attr('data-id');
             $.post(
                 url,
@@ -121,8 +120,7 @@ $script = <<<JS
         $(document).on('change', '#project-dropdown', function(event){
             var select = $(event.target);
             var selected_value = select.val();
-            // var url =  "/task/set-project";
-            var url =  "?r=task/set-project";
+            var url =  "/task/set-project";
             var id = select.attr('data-id');
             $.ajax({
                 type: 'POST',
@@ -148,8 +146,7 @@ $script = <<<JS
             // console.log('Нажата кнопка ' + btn.html());
             var task_id = btn.attr('data-id');
             $.get(
-                // '/task/start-task',
-                "?r=/task/start-task",
+                '/task/start-task',
                 {
                     id: task_id
                 },

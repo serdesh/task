@@ -72,13 +72,11 @@ class TaskController extends Controller
                 'start',
                 'status',
                 'done_date',
-//                'id'
             ],
             'defaultOrder' => [
                 'start' => SORT_DESC,
                 'status' => SORT_ASC,
                 'done_date' => SORT_DESC,
-//                'id' => SORT_DESC,
             ]
         ]);
         $dataProvider->pagination = false;
