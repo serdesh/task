@@ -49,6 +49,7 @@ use yii\widgets\ActiveForm;
 
     <?= $form->field($model, 'notes')->textarea(['rows' => 3]) ?>
 
+    <?= $form->field($model, 'paid')->checkbox() ?>
 
     <?php if (!Yii::$app->request->isAjax) { ?>
         <div class="form-group">
