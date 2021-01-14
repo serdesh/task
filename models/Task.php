@@ -29,6 +29,7 @@ use yii\helpers\ArrayHelper;
  * @property int $plan_time Планируемое время
  * @property int $parent_task_id Родительская задача
  * @property int $parented Флаг, показывать (1) или нет (0) только родительские задачи
+ * @property string $paid_date Дата оплаты задачи
  *
  * @property Project $project
  * @property Task $parentTask
@@ -61,7 +62,7 @@ class Task extends ActiveRecord
     {
         return [
             [['description', 'notes'], 'string'],
-            [['start', 'all_time', 'projects', 'json_text', 'customers', 'parented'], 'safe'],
+            [['start', 'all_time', 'projects', 'json_text', 'customers', 'parented', 'paid_date'], 'safe'],
             [['status', 'project_id', 'search_all', 'paid', 'plan_time', 'parent_task_id'], 'integer'],
             [
                 ['project_id'],
@@ -97,6 +98,7 @@ class Task extends ActiveRecord
             'agreed_price' => 'Фикс. сумма задачи',
             'plan_time' => 'Время план.',
             'parent_task_id' => 'Родительская задача',
+            'paid_date' => 'Дата оплаты',
         ];
     }
 

@@ -50,6 +50,7 @@ use yii\widgets\ActiveForm;
     <?= $form->field($model, 'notes')->textarea(['rows' => 3]) ?>
 
     <?= $form->field($model, 'paid')->checkbox() ?>
+    <?= $form->field($model, 'paid_date')->input('date') ?>
 
     <?php if (!Yii::$app->request->isAjax) { ?>
         <div class="form-group">
