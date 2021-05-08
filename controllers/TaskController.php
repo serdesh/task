@@ -65,6 +65,8 @@ class TaskController extends Controller
             return ['output' => $model->$attribute];
         }
 
+        Yii::info(Yii::$app->request->queryParams, 'test');
+
         $searchModel = new TaskSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
         $dataProvider->setSort([
@@ -577,6 +579,20 @@ class TaskController extends Controller
         return $this->render('decoder', [
             'model' => $model,
         ]);
+    }
+
+    /**
+     * Просмотр полного текста примечания
+     * @param string $note Примечание
+     * @return array
+     */
+    public function actionViewNote($note)
+    {
+        Yii::$app->response->format = Response::FORMAT_JSON;
+        return [
+            'title' => 'Примечние',
+            'content' => nl2br($note),
+        ];
     }
 
 }

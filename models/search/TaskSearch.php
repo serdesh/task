@@ -45,8 +45,9 @@ class TaskSearch extends Task
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
         ]);
-        if (!$params) {
+        if (!$params || (count($params) == 1 && isset($params['_pjax']))) {
             $query->andWhere(['paid' => 0]);
+            $query->orWhere(['status' => Task::TASK_STATUS_IN_WORK]);
         }
         \Yii::info($params, 'test');
 

@@ -109,14 +109,20 @@ return [
     [
         'class' => '\kartik\grid\DataColumn',
         'attribute' => 'notes',
-        'value' => function ($data) {
+        'value' => function (Task $data) {
             if ($data->status == Task::TASK_STATUS_IN_WORK) {
-                return $data->notes;
+                if (iconv_strlen($data->notes,'UTF-8') > 30){
+                    return Html::a(mb_substr($data->notes,0, 30) . '...', ['/task/view-note', 'note' => $data->notes], [
+                        'role' => 'modal-remote',
+                    ]);
+                } else {
+                    return $data->notes;
+                }
             }
             //Если задача завершена, комментарий не выводим
             return '';
         },
-        'format' => 'nText',
+        'format' => 'raw',
     ],
     [
         'class' => '\kartik\grid\DataColumn',
