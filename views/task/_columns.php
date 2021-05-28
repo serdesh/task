@@ -62,7 +62,7 @@ return [
         'class' => '\kartik\grid\DataColumn',
         'attribute' => 'all_time',
         'value' => function (Task $model) {
-            return Html::tag('p',  Task::formatMinutes($model->getTotalTimeForTask($model->id)), [
+            return Html::tag('p', Task::formatMinutes($model->getTotalTimeForTask($model->id)), [
                 'id' => 'time-' . $model->id,
             ]);
         },
@@ -110,17 +110,13 @@ return [
         'class' => '\kartik\grid\DataColumn',
         'attribute' => 'notes',
         'value' => function (Task $data) {
-            if ($data->status == Task::TASK_STATUS_IN_WORK) {
-                if (iconv_strlen($data->notes,'UTF-8') > 30){
-                    return Html::a(mb_substr($data->notes,0, 30) . '...', ['/task/view-note', 'note' => $data->notes], [
-                        'role' => 'modal-remote',
-                    ]);
-                } else {
-                    return $data->notes;
-                }
+            if (iconv_strlen($data->notes, 'UTF-8') > 30) {
+                return Html::a(mb_substr($data->notes, 0, 30) . '...', ['/task/view-note', 'note' => $data->notes], [
+                    'role' => 'modal-remote',
+                ]);
+            } else {
+                return $data->notes;
             }
-            //Если задача завершена, комментарий не выводим
-            return '';
         },
         'format' => 'raw',
     ],
@@ -130,7 +126,7 @@ return [
 //        'filter' => [1 => 'Да', 0 => 'Нет'],
         'label' => 'ФС',
         'value' => function (Task $model) {
-            if ($model->agreed_price > 0){
+            if ($model->agreed_price > 0) {
                 return $model->agreed_price;
             }
             return ' ';
@@ -145,12 +141,16 @@ return [
         },
         'viewOptions' => ['role' => 'modal-remote', 'title' => 'View', 'data-toggle' => 'tooltip'],
         'updateOptions' => ['role' => 'modal-remote', 'title' => 'Update', 'data-toggle' => 'tooltip'],
-        'deleteOptions' => ['role' => 'modal-remote', 'title' => 'Delete',
-            'data-confirm' => false, 'data-method' => false,// for overide yii data api
+        'deleteOptions' => [
+            'role' => 'modal-remote',
+            'title' => 'Delete',
+            'data-confirm' => false,
+            'data-method' => false,// for overide yii data api
             'data-request-method' => 'post',
             'data-toggle' => 'tooltip',
             'data-confirm-title' => 'Are you sure?',
-            'data-confirm-message' => 'Are you sure want to delete this item'],
+            'data-confirm-message' => 'Are you sure want to delete this item'
+        ],
     ],
 
 ];   
