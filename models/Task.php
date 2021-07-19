@@ -112,6 +112,10 @@ class Task extends ActiveRecord
             $this->done_date = null;
         }
 
+        if (!$this->paid_date){
+            $this->paid_date = date('Y-m-d', time());
+        }
+
         return parent::beforeSave($insert);
     }
 
