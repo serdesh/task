@@ -112,7 +112,8 @@ class Task extends ActiveRecord
             $this->done_date = null;
         }
 
-        if (!$this->paid_date){
+        if (!$this->paid_date && $this->paid){
+            //Если даты оплаты нет и признак оплаты установлен
             $this->paid_date = date('Y-m-d', time());
         }
 
