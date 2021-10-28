@@ -32,9 +32,7 @@ tests/_support/_generated
 #vagrant folder
 /.vagrant
 
-config/db.php
 /web/images/*
 /web/uploads/*
 /credentials.json
 /token.json
-/config/web.php
