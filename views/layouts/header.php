@@ -18,7 +18,7 @@ use yii\helpers\Html;
 
         <div class="navbar-custom-menu">
 
-            <ul class="nav navbar-nav">
+            <ul class="nav">
 
                 <!-- Messages: style can be found in dropdown.less-->
                 <li class="dropdown messages-menu">

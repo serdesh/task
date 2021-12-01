@@ -142,3 +142,8 @@ a.desc:after {
 .filter-report button {
     margin-top: 7px;
 }
+
+.navbar {
+    display: block;
+    padding: 0 1rem;
+}
