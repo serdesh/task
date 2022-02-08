@@ -63,12 +63,22 @@ use yii\widgets\ActiveForm;
             ];
             $params = [
                 'prompt' => 'Выберите статус...',
-                'multiple' => true,
+//                'multiple' => true,
             ];
             echo $form->field($model, 'status')->dropDownList($items,$params);
             ActiveForm::end();
             ?>
             <?= Html::button('Обновить', ['class' => 'btn btn-success', 'id' => 'btn']) ?>
+        </div>
+    </div>
+
+    <div class="panel panel-default">
+        <div class="panel-heading">Работа с <?= Html::a('js-cookie', 'https://github.com/js-cookie/js-cookie', [
+                'target' => '_blank'
+            ]) ?></div>
+        <div class="panel-body">
+            <?= Html::checkbox('cookie-check', 0, ['id' => 'cookie-check']) ?>
+            <label class="control-label" for="cookie-check"> Какой-то чекбокс</label>
         </div>
     </div>
 
@@ -96,6 +106,27 @@ $(document).ready(function(){
     ];
             $("#my-select").select2({data: data});
     });
+    
+    //куки-чекбокс
+    let my_cookies = Cookies.noConflict();
+    let cookie_checked = my_cookies.get('checked');
+    let checkbox = $('#cookie-check');
+    console.log('Cookie get: ' + my_cookies.get('checked'))
+    console.log(typeof Boolean(cookie_checked));
+    let num = Number(cookie_checked);
+    console.log(typeof num);
+    console.log(num);
+    checkbox.prop('checked', Boolean(num));
+    
+    $(this).on('click', '#cookie-check', function (){
+        if (checkbox.is(':checked')){
+            my_cookies.set('checked', 1)
+        } else {
+            my_cookies.set('checked', 0)
+        }
+        console.log('Cookie set: ' + my_cookies.get('checked'))
+    })
+    
 });
 JS;
 

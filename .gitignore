@@ -36,3 +36,4 @@ tests/_support/_generated
 /web/uploads/*
 /credentials.json
 /token.json
+/node_modules

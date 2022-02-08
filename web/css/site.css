@@ -147,3 +147,7 @@ a.desc:after {
     display: block;
     padding: 0 1rem;
 }
+
+.navbar-nav {
+    flex-direction: row;
+}
