@@ -12,17 +12,26 @@ return [
     [
         'class' => '\kartik\grid\SerialColumn',
     ],
-//    [
-//        'class' => '\kartik\grid\DataColumn',
-//        'attribute' => 'id',
-//        'label' => '#',
-//        'filter' => false,
-//        'vAlign' => 'middle',
-//    ],
+    [
+        'class' => '\kartik\grid\DataColumn',
+        'attribute' => 'paid',
+        'filter' => false,
+        'value' => function (Task $model) {
+            $txt = $model->paid ? 'Да' : '<b>Нет</b>';
+            return Html::a($txt, ['view', 'id' => $model->id], ['role' => 'modal-remote', 'title' => 'Просмотр информации о задаче']);
+        },
+        'vAlign' => 'middle',
+        'hAlign' => 'center',
+        'format' => 'raw'
+    ],
     [
         'class' => '\kartik\grid\DataColumn',
         'attribute' => 'done_date',
         'filter' => false,
+//        'value' => function (Task $model) {
+//    Yii::debug($model->done_date, 'test');
+//
+//        },
         'vAlign' => 'middle',
         'format' => 'date',
     ],

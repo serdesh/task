@@ -220,7 +220,7 @@ class Task extends ActiveRecord
 
     }
 
-    public static function formatMinutes($all_min)
+    public static function formatMinutes($all_min): string
     {
         $hour = (int)($all_min / 60);
 
