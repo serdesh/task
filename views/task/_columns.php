@@ -99,6 +99,7 @@ return [
                 return Html::button('Старт', [
                     'class' => 'btn btn-success start-btn',
                     'data-id' => $data->id,
+                    'id' => 'start-btn-' . $data->id,
                 ]);
             }
             return '';
@@ -136,7 +137,7 @@ return [
         'class' => 'kartik\grid\ActionColumn',
         'dropdown' => false,
         'vAlign' => 'middle',
-        'urlCreator' => function ($action, $model, $key, $index) {
+        'urlCreator' => function ($action, $model, $key) {
             return Url::to([$action, 'id' => $key]);
         },
         'viewOptions' => ['role' => 'modal-remote', 'title' => 'View', 'data-toggle' => 'tooltip'],

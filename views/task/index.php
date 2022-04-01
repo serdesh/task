@@ -143,7 +143,6 @@ $script = <<<JS
         $(document).on('click', '.start-btn', function(e) {
             e.preventDefault();
             var btn = $(this);
-            // console.log('Нажата кнопка ' + btn.html());
             var task_id = btn.attr('data-id');
             $.get(
                 '/task/start-task',
